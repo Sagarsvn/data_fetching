@@ -1,0 +1,8 @@
+# redis
+redis==4.3.4
+
+# mongodb
+pymongo==4.3.2
+
+# pandas
+pandas==1.5.1
