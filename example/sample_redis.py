@@ -24,18 +24,16 @@ def create_connection(db: int) -> redis.StrictRedis:
 
 def scan_db_0():
     conn = create_connection(db=0)
-    cnt = 1
+    tmp = []
+    cnt = 0
     for key in conn.scan_iter(match="*"):
         if cnt == 10:
             break
-
-        value = {
-            k.decode("utf-8"): v.decode("utf-8") for k, v in conn.hgetall(key).items()
-        }
-        print(value)
-
+        tmp.append(key)
         cnt += 1
 
+    resp = conn.hgetall(*tmp)
+    print(resp)
     # close connection
     conn.close()
 
@@ -74,5 +72,5 @@ def scan_db_2():
 
 if __name__ == "__main__":
     scan_db_0()
-    scan_db_1()
-    scan_db_2()
+    # scan_db_1()
+    # scan_db_2()
