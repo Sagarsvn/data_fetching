@@ -1,9 +1,12 @@
+from urllib.parse import quote_plus
 from typing import Union, Any, Mapping
 import pandas
 import pymongo
 from pymongo.database import Database
 
-DB_URI = "mongodb://aiml:rctiplus2022%40%40@localhost:27017/conviva?authSource=conviva&directConnection=true"
+DB_URI = "mongodb://aiml:{password}@localhost:27071/conviva?authSource=conviva&directConnection=true".format(
+    password=quote_plus("rctiplus2022@@")
+)
 
 
 def create_connection() -> Database[Union[Mapping[str, Any], Any]]:
