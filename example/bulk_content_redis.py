@@ -62,12 +62,7 @@ def fetch_value_from_keys(
     :param keys: list of keys
     """
     q = []
-    c = 1
     for keys in chunk_array_keys(keys):
-        if c == 2 :
-            break
-        else :
-            c = c + 1
             n = len(keys)
             print("fetch value from : {} keys".format(n))
             # open connection
