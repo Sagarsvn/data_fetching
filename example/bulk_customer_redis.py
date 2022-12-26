@@ -1,3 +1,5 @@
+import ast
+
 from pandas import DataFrame
 import redis
 from copy import deepcopy
@@ -26,15 +28,15 @@ def create_connection(db: int) -> redis.StrictRedis:
 
 
 def chunk_array_keys(
-    keys: List[str],
-    chunk_size: int = 1000,
+        keys: List[str],
+        chunk_size: int = 1000,
 ) -> List[List[str]]:
     """Split array of keys into chunks
     :param keys: list of keys
     :param chunk_size: size of chunk
     :return: list of chunks
     """
-    return [keys[i : i + chunk_size] for i in range(0, len(keys), chunk_size)]
+    return [keys[i: i + chunk_size] for i in range(0, len(keys), chunk_size)]
 
 
 def fetch_all_keys() -> List[str]:
@@ -51,30 +53,35 @@ def fetch_all_keys() -> List[str]:
 
 
 def fetch_value_from_keys(
-    keys: List[str],
+        keys: List[str],
 ) -> List[Dict[str, Any]]:
     """Fetch value from keys
     :param keys: list of keys
     """
     q = []
+    final_resp = []
     for keys in chunk_array_keys(keys):
-        n = len(keys)
-        print("fetch value from : {} keys".format(n))
-        # open connection
-        conn = create_connection(0)
-        # setup pipeline
-        p = conn.pipeline()
-        # get value from keys
-        _ = [p.hgetall(key) for key in keys]
-        # execute pipeline
-        q += [result for result in p.execute()]
+            n = len(keys)
+            print("fetch value from : {} keys".format(n))
+            # open connection
+            conn = create_connection(0)
+            # setup pipeline
+            p = conn.pipeline()
+            # get value from keys
+            _ = [p.hgetall(key) for key in keys]
+            # execute pipeline
+            q += [result for result in p.execute()]
+            for resp in q:
+                temp = {}
+                for k, v in resp.items():
+                    temp[k.decode('utf-8')] = v.decode('utf-8')
+                final_resp.append(temp)
 
-        len_q = len(q)
-        print("q now is: {} records".format(len_q))
-        # close connection
-        conn.close()
-
-    return q
+            len_q = len(final_resp)
+            print("q now is: {} records".format(len_q))
+            # close connection
+            conn.close()
+    return final_resp
 
 
 def export_data_db_0():
@@ -89,8 +96,8 @@ def export_data_db_0():
     n = len(df)
     print("total data: {} records".format(n))
     print("exporting to csv")
-    # export to csv
-    df.to_csv("data.csv", index=False)
+    # export to compressed pickle
+    df.to_pickle("customer.pkl", compression='gzip')
 
 
 if __name__ == "__main__":
