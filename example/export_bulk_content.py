@@ -1,3 +1,6 @@
+import ast
+from itertools import chain
+
 from pandas import DataFrame
 import redis
 from copy import deepcopy
@@ -42,7 +45,7 @@ def fetch_all_keys() -> List[str]:
     :return: list of all keys in redis
     """
     # open connection
-    conn = create_connection(0)
+    conn = create_connection(1)
     # get all keys
     keys = deepcopy(conn.keys())
     # close connection
@@ -58,22 +61,23 @@ def fetch_value_from_keys(
     """
     q = []
     for keys in chunk_array_keys(keys):
-        n = len(keys)
-        print("fetch value from : {} keys".format(n))
-        # open connection
-        conn = create_connection(0)
-        # setup pipeline
-        p = conn.pipeline()
-        # get value from keys
-        _ = [p.hgetall(key) for key in keys]
-        # execute pipeline
-        q += [result for result in p.execute()]
+            n = len(keys)
+            print("fetch value from : {} keys".format(n))
+            # open connection
+            conn = create_connection(1)
+            # setup pipeline
+            p = conn.pipeline()
+            # get value from keys
+            _ = [p.get(key) for key in keys]
+            # execute pipeline
+            q += [result.decode("utf-8") for result in p.execute()]
 
-        len_q = len(q)
-        print("q now is: {} records".format(len_q))
-        # close connection
-        conn.close()
-
+            len_q = len(q)
+            print("q now is: {} records".format(len_q))
+            # close connection
+            conn.close()
+    q = [i.replace('null', 'None') for i in q]
+    q = [ast.literal_eval(i) for i in q]
     return q
 
 
@@ -84,13 +88,13 @@ def export_data_db_0():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(values)
+    df = DataFrame(list(chain.from_iterable(values)))
     # get len dataframe
     n = len(df)
     print("total data: {} records".format(n))
-    print("exporting to csv")
     # export to csv
-    df.to_csv("data.csv", index=False)
+    print("exporting to csv")
+    df.to_pickle("video_content.pkl", compression='gzip')
 
 
 if __name__ == "__main__":
