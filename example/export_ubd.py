@@ -57,7 +57,7 @@ def get_registered_user_ubd():
 
             print("save to s3")
             cls.write_df_pkl_to_s3(data=df,
-                                   object_name=ubd_path + "registered.pkl")
+                                   object_name=ubd_path + "registered_ubd.pkl")
     except Exception as e:
         print(f"Error while user behaviour data, Exception: {e}")
 
@@ -93,7 +93,7 @@ def get_anonymous_user_ubd():
         df = DataFrame(tmp)
         print("save to s3")
         cls.write_df_pkl_to_s3(data=df,
-                               object_name=ubd_path + "anonymous.pkl")
+                               object_name=ubd_path + "anonymous_ubd.pkl")
 
     except Exception as e:
         print(f"Error while user behaviour data, Exception: {e}")
