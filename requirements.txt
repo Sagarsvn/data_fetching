@@ -9,3 +9,9 @@ pandas==1.5.1
 
 # .env
 python-dotenv==0.19.0
+
+#pydatic
+pydantic==1.10.4
+
+#s3
+boto3==1.26.48

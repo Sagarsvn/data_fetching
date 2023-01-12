@@ -2,12 +2,18 @@ from urllib.parse import quote_plus
 from typing import Union, Any, Mapping
 import pandas
 import pymongo
+from pandas import DataFrame
 from pymongo.database import Database
 import re
 
-DB_URI = "mongodb://aiml:{password}@localhost:27017/conviva?authSource=conviva&directConnection=true".format(
-    password=quote_plus("rctiplus2022@@")
+from config.config import Config, ubd_start_month, ubd_end_month, ubd_path
+from utils.s3_service import S3Service
+
+DB_URI = '''mongodb://{user}:{password}@localhost:27018/conviva?authSource=conviva&directConnection=true'''.format(
+    user=Config().mongodb_user,
+    password=quote_plus(Config().mongodb_password)
 )
+cls = S3Service.from_connection()
 
 
 def create_connection() -> Database[Union[Mapping[str, Any], Any]]:
@@ -23,64 +29,84 @@ def get_registered_user_ubd():
     """
      :return registered_user ubd
     """
-    conn = create_connection()
-    db_conn = conn["prod-conviva-data"]
-    tmp = []
-    for rec in db_conn.find(
-            {
-                "Viewerid": {"$ne": None},
-                "ContentId": {"$nin": [None, "N/A", "", "NA"]},
-                "IsLogin": {"$nin": [None, "N/A", "", "NA"], "$in": ["yes", "true", "login"]},
-                "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
-                "StartTime": {"$nin": [None, "N/A", "", "NA"]},
-                "ContentType": {
-                    "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
-                "DataDate": {
-                    "$lte": "2022-12-31",
-                    "$gte": "2022-07-01",
-                }
-            },
-            {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,
-             '_id': False}
-    ):
-        print(rec)
-        tmp.append(rec)
+    try:
+        conn = create_connection()
+        db_conn = conn["prod-conviva-data"]
+        tmp = []
+        for rec in db_conn.find(
+                {
+                    "Viewerid": {"$ne": None},
+                    "ContentId": {"$nin": [None, "N/A", "", "NA"]},
+                    "IsLogin": {"$nin": [None, "N/A", "", "NA"], "$in": ["yes", "true", "login"]},
+                    "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
+                    "StartTime": {"$nin": [None, "N/A", "", "NA"]},
+                    "ContentType": {
+                        "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
+                    "DataDate": {
+                        "$lte": ubd_end_month,
+                        "$gte": ubd_start_month,
+                    }
+                },
+                {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,
+                 '_id': False}
+        ):
+            print(rec)
+            tmp.append(rec)
 
-    pandas.DataFrame(tmp).to_pickle("registerd.pkl", compression='gzip')
+            df = DataFrame(tmp)
+
+            print("save to s3")
+            cls.write_df_pkl_to_s3(data=df,
+                                   object_name=ubd_path + "registered_ubd.pkl")
+    except Exception as e:
+        print(f"Error while user behaviour data, Exception: {e}")
 
 
 def get_anonymous_user_ubd():
     """
     :return anonymous_user ubd
     """
-    conn = create_connection()
-    db_conn = conn["prod-conviva-data"]
-    tmp = []
-    for rec in db_conn.find(
-            {
-                "Viewerid": {"$ne": None},
-                "ContentId": {"$nin": [None, "N/A", "", "NA"]},
-                "IsLogin": {"$nin": [None, "N/A", "", "NA"], "$in": ["no", "false", "not login"]},
-                "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
-                "StartTime": {"$nin": [None, "N/A", "", "NA"]},
-                "ContentType": {
-                    "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
-                "DataDate": {
-                    "$lte": "2022-12-31",
-                    "$gte": "2022-07-01",
-                }
-            },
-            {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,
-             '_id': False}
-    ):
-        print(rec)
-        tmp.append(rec)
+    try:
+        conn = create_connection()
+        db_conn = conn["prod-conviva-data"]
+        tmp = []
+        for rec in db_conn.find(
+                {
+                    "Viewerid": {"$ne": None},
+                    "ContentId": {"$nin": [None, "N/A", "", "NA"]},
+                    "IsLogin": {"$nin": [None, "N/A", "", "NA"], "$in": ["no", "false", "not login"]},
+                    "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
+                    "StartTime": {"$nin": [None, "N/A", "", "NA"]},
+                    "ContentType": {
+                        "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
+                    "DataDate": {
+                        "$lte": "2022-12-31",
+                        "$gte": "2022-07-01",
+                    }
+                },
+                {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,
+                 '_id': False}
+        ):
+            print(rec)
+            tmp.append(rec)
 
-    pandas.DataFrame(tmp).to_pickle("anonymous_user.pkl", compression='gzip')
+        df = DataFrame(tmp)
+        print("save to s3")
+        cls.write_df_pkl_to_s3(data=df,
+                               object_name=ubd_path + "anonymous_ubd.pkl")
+
+    except Exception as e:
+        print(f"Error while user behaviour data, Exception: {e}")
+
+
+def all_ubd_record():
+    # get registered user
+    print("exporting  user behaviour data for registered user".center(100, "*"))
+    get_registered_user_ubd()
+    # get anonymous user
+    print("exporting  user behaviour data for anonymous user".center(100, "*"))
+    get_anonymous_user_ubd()
 
 
 if __name__ == "__main__":
-    # get registered user
-    get_registered_user_ubd()
-    # get anonymous user
-    get_anonymous_user_ubd()
+    all_ubd_record()

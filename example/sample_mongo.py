@@ -4,8 +4,11 @@ import pandas
 import pymongo
 from pymongo.database import Database
 
-DB_URI = "mongodb://aiml:{password}@localhost:27071/conviva?authSource=conviva&directConnection=true".format(
-    password=quote_plus("rctiplus2022@@")
+from config.config import Config
+
+
+DB_URI = '''mongodb://{user}:{password}@localhost:27018/conviva?authSource=conviva&directConnection=true'''.format(user =Config().mongodb_user,
+    password=quote_plus(Config().mongodb_password)
 )
 
 
