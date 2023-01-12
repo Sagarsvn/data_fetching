@@ -3,7 +3,7 @@ import redis
 from copy import deepcopy
 from typing import List, Dict, Any
 
-from config.config import user_path
+from config.config import user_path, Config
 from utils.s3_service import S3Service
 
 
@@ -13,11 +13,11 @@ def create_connection(db: int) -> redis.StrictRedis:
     :return: connection pool
     """
     pool = redis.ConnectionPool(
-        host="localhost",
-        port=63791,
+        host=Config().redis_localhost,
+        port=Config().redis_port,
         db=db,
-        username="aiml",
-        password="UJ9Gbhh9uEJTpAZf",
+        username=Config().redis_user_name,
+        password=Config().redis_password,
     )
     conn = redis.StrictRedis(
         connection_pool=pool,
