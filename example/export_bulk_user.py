@@ -3,6 +3,9 @@ import redis
 from copy import deepcopy
 from typing import List, Dict, Any
 
+from config.config import user_path
+from utils.s3_service import S3Service
+
 
 def create_connection(db: int) -> redis.StrictRedis:
     """Initialize redis connection
@@ -91,7 +94,7 @@ def remove_binary_object(values):
     return final_resp
 
 
-def export_data_db_0():
+def export_all_customer():
     """Export data from db 0"""
     # get all keys
     keys = fetch_all_keys()
@@ -106,8 +109,10 @@ def export_data_db_0():
     print("total data: {} records".format(n))
     # export to csv
     print("exporting to csv")
-    df.to_pickle("customer.pkl", compression='gzip')
+    cls = S3Service.from_connection()
+    cls.write_df_pkl_to_s3(data=df, object_name=
+    user_path + "customer.pkl")
 
 
 if __name__ == "__main__":
-    export_data_db_0()
+    export_all_customer()
