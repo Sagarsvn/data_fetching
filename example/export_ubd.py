@@ -80,8 +80,8 @@ def get_anonymous_user_ubd():
                     "ContentType": {
                         "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
                     "DataDate": {
-                        "$lte": "2022-12-31",
-                        "$gte": "2022-07-01",
+                        "$lte": ubd_end_month,
+                        "$gte": ubd_start_month,
                     }
                 },
                 {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,

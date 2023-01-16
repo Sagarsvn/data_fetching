@@ -7,6 +7,9 @@ from copy import deepcopy
 from typing import List, Dict, Any
 
 from config.config import Config, static_path, content_path
+from config.constant import ACTOR_REQUIRED, ACTOR_RENAME, GENRE_REQUIRED, GENRE_RENAME, DIRECTOR_RENAME, \
+    DIRECTOR_REQUIRED, CLIP_RENAME, EXTRA_RENAME, WRITER_REQUIRED, WRITER_RENAME, PROGRAM_TYPE_REQUIRED, \
+    PROGRAM_TYPE_RENAME
 from utils.s3_service import S3Service
 
 cls = S3Service.from_connection()
@@ -94,13 +97,17 @@ def fetch_actor():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    actor = DataFrame(list(chain.from_iterable(values)))
+    # rename column
+    actor = actor[ACTOR_REQUIRED]
+    # required column
+    actor = actor.rename(columns=ACTOR_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(actor)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=actor, object_name=
     static_path + "actor.pkl")
 
 
@@ -112,13 +119,17 @@ def fetch_genre():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    genre = DataFrame(list(chain.from_iterable(values)))
+    # rename column
+    genre = genre[GENRE_REQUIRED]
+    # required column
+    genre = genre.rename(columns=GENRE_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(genre)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=genre, object_name=
     static_path + "genre.pkl")
 
 
@@ -130,13 +141,17 @@ def fetch_writers():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    writer = DataFrame(list(chain.from_iterable(values)))
+    # rename column
+    writer = writer[WRITER_REQUIRED]
+    # required column
+    writer = writer.rename(columns=WRITER_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(writer)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=writer, object_name=
     static_path + "writers.pkl")
 
 
@@ -148,13 +163,18 @@ def fetch_directors():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    director = DataFrame(list(chain.from_iterable(values)))
+    # required column
+    director = director[DIRECTOR_REQUIRED]
+    # rename column
+    director = director.rename(columns=DIRECTOR_RENAME)
+
     # get len dataframe
-    n = len(df)
+    n = len(director)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=director, object_name=
     static_path + "directors.pkl")
 
 
@@ -184,14 +204,16 @@ def fetch_clip():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    clip = DataFrame(list(chain.from_iterable(values)))
+    # rename column
+    clip = clip.rename(columns=CLIP_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(clip)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
-    static_path + "clip.pkl")
+    cls.write_df_pkl_to_s3(data=clip,
+    object_name=static_path + "clip.pkl")
 
 
 def fetch_extra():
@@ -203,13 +225,15 @@ def fetch_extra():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    extra = DataFrame(list(chain.from_iterable(values)))
+    # rename column
+    extra = extra.rename(columns=EXTRA_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(extra)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=extra, object_name=
     static_path + "extra.pkl")
 
 
@@ -222,13 +246,15 @@ def fetch_episode():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    episode = DataFrame(list(chain.from_iterable(values)))
+    # rename column
+    episode = episode.rename(columns=EXTRA_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(episode)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=episode, object_name=
     static_path + "episode.pkl")
 
 
@@ -241,13 +267,17 @@ def fetch_program_type():
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # convert to dataframe
-    df = DataFrame(list(chain.from_iterable(values)))
+    program = DataFrame(list(chain.from_iterable(values)))
+    # required column
+    program = program[PROGRAM_TYPE_REQUIRED]
+    # rename column
+    program = program.rename(columns=PROGRAM_TYPE_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(program)
     print("total data: {} records".format(n))
     # export to csv
     print("save to s3")
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=program, object_name=
     content_path + "program.pkl")
 
 
