@@ -36,3 +36,6 @@ DIRECTOR_RENAME = dict(id='director_id', first_name='director_name')
 WRITER_RENAME = dict(id='writer_id', first_name='writer_name')
 
 GENRE_RENAME = dict(id='genre_id', name='gnere_name')
+
+# user_behaviour_field"
+UBD_RENAME = dict(Viewerid='customer_id', StartTime='created_on', ContentId='content_id')
