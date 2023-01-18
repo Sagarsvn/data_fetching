@@ -7,6 +7,7 @@ from pymongo.database import Database
 import re
 
 from config.config import Config, ubd_start_month, ubd_end_month, ubd_path
+from config.constant import UBD_RENAME
 from utils.s3_service import S3Service
 
 DB_URI = '''mongodb://{user}:{password}@localhost:27018/conviva?authSource=conviva&directConnection=true'''.format(
@@ -53,11 +54,11 @@ def get_registered_user_ubd():
             print(rec)
             tmp.append(rec)
 
-            df = DataFrame(tmp)
+        df = DataFrame(tmp).rename(UBD_RENAME, axis=1)
 
-            print("save to s3")
-            cls.write_df_pkl_to_s3(data=df,
-                                   object_name=ubd_path + "registered_ubd.pkl")
+        print("save to s3")
+        cls.write_df_pkl_to_s3(data=df,
+                               object_name=ubd_path + "registered_ubd.pkl")
     except Exception as e:
         print(f"Error while user behaviour data, Exception: {e}")
 
@@ -80,8 +81,8 @@ def get_anonymous_user_ubd():
                     "ContentType": {
                         "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
                     "DataDate": {
-                        "$lte": "2022-12-31",
-                        "$gte": "2022-07-01",
+                        "$lte": ubd_end_month,
+                        "$gte": ubd_start_month,
                     }
                 },
                 {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,
@@ -90,7 +91,8 @@ def get_anonymous_user_ubd():
             print(rec)
             tmp.append(rec)
 
-        df = DataFrame(tmp)
+        df = DataFrame(tmp).rename(UBD_RENAME, axis=1)
+
         print("save to s3")
         cls.write_df_pkl_to_s3(data=df,
                                object_name=ubd_path + "anonymous_ubd.pkl")

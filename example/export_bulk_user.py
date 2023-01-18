@@ -4,6 +4,7 @@ from copy import deepcopy
 from typing import List, Dict, Any
 
 from config.config import user_path, Config
+from config.constant import CUSTOMER_REQUIRED, CUSTOMER_RENAME
 from utils.s3_service import S3Service
 
 
@@ -30,7 +31,7 @@ def create_connection(db: int) -> redis.StrictRedis:
 
 def chunk_array_keys(
         keys: List[str],
-        chunk_size: int = 1000,
+        chunk_size: int = 10000,
 ) -> List[List[str]]:
     """Split array of keys into chunks
     :param keys: list of keys
@@ -104,15 +105,20 @@ def export_all_customer():
     final_resp = remove_binary_object(values)
     # convert to dataframe
     df = DataFrame(final_resp)
+    # rename column
+    df = df[CUSTOMER_REQUIRED]
+    # required column
+    final_df = df.rename(columns=CUSTOMER_RENAME)
     # get len dataframe
-    n = len(df)
+    n = len(final_df)
     print("total data: {} records".format(n))
     # export to csv
     print("exporting to csv")
     cls = S3Service.from_connection()
-    cls.write_df_pkl_to_s3(data=df, object_name=
+    cls.write_df_pkl_to_s3(data=final_df, object_name=
     user_path + "customer.pkl")
 
 
 if __name__ == "__main__":
+    print("fetching customer data from redis and save in to s3")
     export_all_customer()

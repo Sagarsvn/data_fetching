@@ -42,7 +42,7 @@ class Config(BaseSettings):
                                       config.get(ENV, "mongodb_password"))
 
 
-date_to_save = "202301010"
+date_to_save = "20230110"
 content_path = "historical_data/content/raw/{}/".format(date_to_save)
 user_path = "historical_data/user/raw/{}/".format(date_to_save)
 static_path = "historical_data/static/raw/{}/".format(date_to_save)
