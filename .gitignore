@@ -5,13 +5,20 @@
 *.log
 *.py[cod]
 
+# model data
+*.sav
+*.pb
+*.h5
+*.sav.*
+*.pb.*
+*.h5.*
+data/*
+
 # C extensions
 *.so
 
 # Pycharm Extension
 .idea/
-
-data/
 
 # Distribution / packaging
 .Python
@@ -41,7 +48,7 @@ var/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit tests / coverage reports
 htmlcov/
 .tox/
 .coverage
@@ -63,3 +70,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# celery db
+*.db
+
+# virtual env
+venv/

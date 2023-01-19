@@ -97,6 +97,7 @@ def remove_binary_object(values):
 
 def export_all_customer():
     """Export data from db 0"""
+    print("fetching all customer data".center(100, "*"))
     # get all keys
     keys = fetch_all_keys()
     # fetch value from keys
@@ -117,8 +118,3 @@ def export_all_customer():
     cls = S3Service.from_connection()
     cls.write_df_pkl_to_s3(data=final_df, object_name=
     user_path + "customer.pkl")
-
-
-if __name__ == "__main__":
-    print("fetching customer data from redis and save in to s3")
-    export_all_customer()

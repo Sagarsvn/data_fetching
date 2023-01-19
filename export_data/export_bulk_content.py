@@ -9,7 +9,7 @@ from typing import List, Dict, Any
 from config.config import Config, static_path, content_path
 from config.constant import ACTOR_REQUIRED, ACTOR_RENAME, GENRE_REQUIRED, GENRE_RENAME, DIRECTOR_RENAME, \
     DIRECTOR_REQUIRED, CLIP_RENAME, EXTRA_RENAME, WRITER_REQUIRED, WRITER_RENAME, PROGRAM_TYPE_REQUIRED, \
-    PROGRAM_TYPE_RENAME
+    PROGRAM_TYPE_RENAME, EPISODE_RENAME, CLIP_REQUIRED, EXTRA_REQUIRED, EPISODE_REQUIRED
 from utils.s3_service import S3Service
 
 cls = S3Service.from_connection()
@@ -70,6 +70,7 @@ def fetch_value_from_keys(
     """
     q = []
     for keys in chunk_array_keys(keys):
+
         n = len(keys)
         print("fetch value from : {} keys".format(n))
         # open connection
@@ -205,6 +206,8 @@ def fetch_clip():
     values = fetch_value_from_keys(keys)
     # convert to dataframe
     clip = DataFrame(list(chain.from_iterable(values)))
+    # required column
+    clip = clip[CLIP_REQUIRED]
     # rename column
     clip = clip.rename(columns=CLIP_RENAME)
     # get len dataframe
@@ -213,7 +216,7 @@ def fetch_clip():
     # export to csv
     print("save to s3")
     cls.write_df_pkl_to_s3(data=clip,
-    object_name=static_path + "clip.pkl")
+                           object_name=static_path + "clip.pkl")
 
 
 def fetch_extra():
@@ -226,6 +229,8 @@ def fetch_extra():
     values = fetch_value_from_keys(keys)
     # convert to dataframe
     extra = DataFrame(list(chain.from_iterable(values)))
+    # required column
+    extra = extra[EXTRA_REQUIRED]
     # rename column
     extra = extra.rename(columns=EXTRA_RENAME)
     # get len dataframe
@@ -247,8 +252,10 @@ def fetch_episode():
     values = fetch_value_from_keys(keys)
     # convert to dataframe
     episode = DataFrame(list(chain.from_iterable(values)))
+    # required data
+    episode = episode[EPISODE_REQUIRED]
     # rename column
-    episode = episode.rename(columns=EXTRA_RENAME)
+    episode = episode.rename(columns=EPISODE_RENAME)
     # get len dataframe
     n = len(episode)
     print("total data: {} records".format(n))
@@ -310,6 +317,3 @@ def fetch_all_content_with_static():
     print("fetching program_type".center(100, "*"))
     fetch_program_type()
 
-
-if __name__ == "__main__":
-    fetch_all_content_with_static()
