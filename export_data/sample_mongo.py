@@ -43,5 +43,4 @@ def get_all_data_convert_to_dataframe():
     print(df.head(10))
 
 
-if __name__ == "__main__":
-    get_all_data_convert_to_dataframe()
+

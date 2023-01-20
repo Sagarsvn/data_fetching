@@ -70,7 +70,3 @@ def scan_db_2():
     conn.close()
 
 
-if __name__ == "__main__":
-    scan_db_0()
-    # scan_db_1()
-    # scan_db_2()
