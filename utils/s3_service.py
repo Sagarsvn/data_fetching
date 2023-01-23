@@ -1,3 +1,4 @@
+import gzip
 import os
 import pickle
 from typing import ClassVar
@@ -87,10 +88,14 @@ class S3Service:
     def read_pickles_from_s3(self,
                              object_name=None):
         try:
-            response = self.resource.Bucket(self.bucket_name).Object(object_name).get()
-            body_string = response['Body'].read(compresion='gzip')
-            loaded_pickle = pickle.loads(body_string)
+            content_object = self.resource.Object(self.bucket_name, object_name)
+            read_file = content_object.get()["Body"].read()
+            zipfile = BytesIO(read_file)
+            with gzip.GzipFile(fileobj=zipfile) as gzipfile:
+                content = gzipfile.read()
+
+            loaded_pickle = pickle.loads(content)
             print("File {} has been read successfully".format(object_name))
             return loaded_pickle
         except Exception as e:
-            print(f"Unable to find file {object_name}. No such file exists ,Exception:{e}")
+            print(f"Error while reading {object_name} to S3, Exception: {e}")

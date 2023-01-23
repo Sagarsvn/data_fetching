@@ -69,7 +69,7 @@ def get_registered_user_ubd(chunk_size):
             cursor = db_conn.find({
                 "Viewerid": {"$ne": None},
                 "ContentId": {"$nin": [None, "N/A", "", "NA"]},
-                "IsLogin": {"$nin": [None, "N/A", "", "NA"], "$in": ["yes", "true", "login"]},
+                "IsLogin": {"$in": ["yes", "true", "login"]},
                 "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
                 "StartTime": {"$nin": [None, "N/A", "", "NA"]},
                 "ContentType": {
@@ -78,8 +78,8 @@ def get_registered_user_ubd(chunk_size):
                     "$lte": t2,
                     "$gte": t1,
                 }
-            }, {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,
-                '_id': False, 'DataDate': 1}, batch_size=chunk_size
+            }, {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'ContentId': 1, '_id': False, },
+                batch_size=chunk_size
             )
 
             # call genreator function
@@ -87,6 +87,7 @@ def get_registered_user_ubd(chunk_size):
 
             resp = resp.rename(UBD_RENAME, axis=1)
 
+            resp.reset_index(inplace=True, drop=True)
             cls.write_df_pkl_to_s3(data=resp,
                                    object_name=
                                    ubd_path + "registered_ubd_{}.pkl".format(t1.replace("-", "")))
@@ -106,22 +107,27 @@ def get_anonymous_user_ubd(chunk_size):
                 {
                     "Viewerid": {"$ne": None},
                     "ContentId": {"$nin": [None, "N/A", "", "NA"]},
-                    "IsLogin": {"$nin": [None, "N/A", "", "NA"], "$in": ["no", "false", "not login"]},
+                    "IsLogin": {"$in": ["no", "false", "not login"]},
                     "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
                     "StartTime": {"$nin": [None, "N/A", "", "NA"]},
                     "ContentType": {
                         "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
                     "DataDate": {
-                        "$lte": t1,
-                        "$gte": t2,
+                        "$lte": t2,
+                        "$gte": t1,
                     }
                 },
-                {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'IsLogin': 1, 'ContentId': 1,
-                 '_id': False}, batch_size=chunk_size)
+                {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'ContentId': 1, '_id': False},
+                batch_size=chunk_size)
 
             # call genreator function
             resp = genreate_record(cursor=cursor, chunk_size=chunk_size)
             # convert list to dataframe
+            resp.reset_index(inplace=True, drop=True)
+
+            # rename cloumn
+            resp = resp.rename(UBD_RENAME, axis=1)
+
             cls.write_df_pkl_to_s3(data=resp,
                                    object_name=
                                    ubd_path + "anonymous_ubd_{}.pkl".format(t1.replace("-", "")))
@@ -137,4 +143,5 @@ def all_ubd_record():
     # get anonymous user
     print("exporting  user behaviour data for anonymous user".center(100, "*"))
     get_anonymous_user_ubd(chunk_size=50000)
+
 

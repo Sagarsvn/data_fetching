@@ -62,23 +62,21 @@ def fetch_value_from_keys(
     """
     q = []
     for keys in chunk_array_keys(keys):
+            n = len(keys)
+            print("fetch value from : {} keys".format(n))
+            # open connection
+            conn = create_connection(0)
+            # setup pipeline
+            p = conn.pipeline()
+            # get value from keys
+            _ = [p.hgetall(key) for key in keys]
+            # execute pipeline
+            q += [result for result in p.execute()]
 
-        n = len(keys)
-        print("fetch value from : {} keys".format(n))
-        # open connection
-        conn = create_connection(0)
-        # setup pipeline
-        p = conn.pipeline()
-        # get value from keys
-        _ = [p.hgetall(key) for key in keys]
-        # execute pipeline
-        q += [result for result in p.execute()]
-
-        len_q = len(q)
-        print("q now is: {} records".format(len_q))
-        # close connection
-        conn.close()
-
+            len_q = len(q)
+            print("q now is: {} records".format(len_q))
+            # close connection
+            conn.close()
     return q
 
 
@@ -100,6 +98,7 @@ def export_all_customer():
     print("fetching all customer data".center(100, "*"))
     # get all keys
     keys = fetch_all_keys()
+    print(keys)
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # remove binary value from record
@@ -118,3 +117,7 @@ def export_all_customer():
     cls = S3Service.from_connection()
     cls.write_df_pkl_to_s3(data=final_df, object_name=
     user_path + "customer.pkl")
+
+
+
+

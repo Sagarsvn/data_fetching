@@ -153,7 +153,7 @@ def fetch_writers():
     # export to csv
     print("save to s3")
     cls.write_df_pkl_to_s3(data=writer, object_name=
-    static_path + "writers.pkl")
+    static_path + "writer.pkl")
 
 
 def fetch_directors():
@@ -176,7 +176,7 @@ def fetch_directors():
     # export to csv
     print("save to s3")
     cls.write_df_pkl_to_s3(data=director, object_name=
-    static_path + "directors.pkl")
+    static_path + "director.pkl")
 
 
 def fetch_tv():
