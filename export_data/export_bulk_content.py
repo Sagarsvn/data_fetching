@@ -10,6 +10,7 @@ from config.config import Config, static_path, content_path
 from config.constant import ACTOR_REQUIRED, ACTOR_RENAME, GENRE_REQUIRED, GENRE_RENAME, DIRECTOR_RENAME, \
     DIRECTOR_REQUIRED, CLIP_RENAME, EXTRA_RENAME, WRITER_REQUIRED, WRITER_RENAME, PROGRAM_TYPE_REQUIRED, \
     PROGRAM_TYPE_RENAME, EPISODE_RENAME, CLIP_REQUIRED, EXTRA_REQUIRED, EPISODE_REQUIRED
+from utils.logger import Logging
 from utils.s3_service import S3Service
 
 cls = S3Service.from_connection()
@@ -105,9 +106,8 @@ def fetch_actor():
     actor = actor.rename(columns=ACTOR_RENAME)
     # get len dataframe
     n = len(actor)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
+    # save to s3
     cls.write_df_pkl_to_s3(data=actor, object_name=
     static_path + "actor.pkl")
 
@@ -127,9 +127,8 @@ def fetch_genre():
     genre = genre.rename(columns=GENRE_RENAME)
     # get len dataframe
     n = len(genre)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
+    # save to s3
     cls.write_df_pkl_to_s3(data=genre, object_name=
     static_path + "genre.pkl")
 
@@ -149,8 +148,8 @@ def fetch_writers():
     writer = writer.rename(columns=WRITER_RENAME)
     # get len dataframe
     n = len(writer)
-    print("total data: {} records".format(n))
-    # export to csv
+    Logging.info(f"total data: {n} records")
+    # save to s3
     print("save to s3")
     cls.write_df_pkl_to_s3(data=writer, object_name=
     static_path + "writer.pkl")
@@ -172,9 +171,8 @@ def fetch_directors():
 
     # get len dataframe
     n = len(director)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
+    # save to s3
     cls.write_df_pkl_to_s3(data=director, object_name=
     static_path + "director.pkl")
 
@@ -190,9 +188,8 @@ def fetch_tv():
     df = DataFrame(list(chain.from_iterable(values)))
     # get len dataframe
     n = len(df)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
+    # save to s3
     cls.write_df_pkl_to_s3(data=df, object_name=
     static_path + "tv.pkl")
 
@@ -212,9 +209,7 @@ def fetch_clip():
     clip = clip.rename(columns=CLIP_RENAME)
     # get len dataframe
     n = len(clip)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
     cls.write_df_pkl_to_s3(data=clip,
                            object_name=static_path + "clip.pkl")
 
@@ -235,9 +230,8 @@ def fetch_extra():
     extra = extra.rename(columns=EXTRA_RENAME)
     # get len dataframe
     n = len(extra)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
+    # save to s3
     cls.write_df_pkl_to_s3(data=extra, object_name=
     static_path + "extra.pkl")
 
@@ -258,9 +252,8 @@ def fetch_episode():
     episode = episode.rename(columns=EPISODE_RENAME)
     # get len dataframe
     n = len(episode)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
+    # save to s3
     cls.write_df_pkl_to_s3(data=episode, object_name=
     static_path + "episode.pkl")
 
@@ -281,39 +274,38 @@ def fetch_program_type():
     program = program.rename(columns=PROGRAM_TYPE_RENAME)
     # get len dataframe
     n = len(program)
-    print("total data: {} records".format(n))
-    # export to csv
-    print("save to s3")
+    Logging.info(f"total data: {n} records")
+    # save to s3
     cls.write_df_pkl_to_s3(data=program, object_name=
     content_path + "program.pkl")
 
 
 def fetch_all_content_with_static():
-    print("fetching actor".center(100, "*"))
+    Logging.info("fetching actor".center(100, "*"))
 
     fetch_actor()
 
-    print("fetching genre".center(100, "*"))
+    Logging.info("fetching genre".center(100, "*"))
     fetch_genre()
 
-    print("fetching writer".center(100, "*"))
+    Logging.info("fetching writer".center(100, "*"))
     fetch_writers()
 
-    print("fetching director".center(100, "*"))
+    Logging.info("fetching director".center(100, "*"))
     fetch_directors()
 
-    print("fetching tv".center(100, "*"))
+    Logging.info("fetching tv".center(100, "*"))
     fetch_tv()
 
-    print("fetching clip".center(100, "*"))
+    Logging.info("fetching clip".center(100, "*"))
     fetch_clip()
 
-    print("fetching extra".center(100, "*"))
+    Logging.info("fetching extra".center(100, "*"))
     fetch_extra()
 
-    print("fetching episode".center(100, "*"))
+    Logging.info("fetching episode".center(100, "*"))
     fetch_episode()
 
-    print("fetching program_type".center(100, "*"))
+    Logging.info("fetching program_type".center(100, "*"))
     fetch_program_type()
 

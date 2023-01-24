@@ -5,6 +5,7 @@ from typing import List, Dict, Any
 
 from config.config import user_path, Config
 from config.constant import CUSTOMER_REQUIRED, CUSTOMER_RENAME
+from utils.logger import Logging
 from utils.s3_service import S3Service
 
 
@@ -63,7 +64,7 @@ def fetch_value_from_keys(
     q = []
     for keys in chunk_array_keys(keys):
             n = len(keys)
-            print("fetch value from : {} keys".format(n))
+            Logging.info("fetch value from : {} keys".format(n))
             # open connection
             conn = create_connection(0)
             # setup pipeline
@@ -74,7 +75,7 @@ def fetch_value_from_keys(
             q += [result for result in p.execute()]
 
             len_q = len(q)
-            print("q now is: {} records".format(len_q))
+            Logging.info("q now is: {} records".format(len_q))
             # close connection
             conn.close()
     return q
@@ -95,10 +96,10 @@ def remove_binary_object(values):
 
 def export_all_customer():
     """Export data from db 0"""
-    print("fetching all customer data".center(100, "*"))
+    Logging.info("fetching all customer data".center(100, "*"))
     # get all keys
     keys = fetch_all_keys()
-    print(keys)
+    Logging.info(keys)
     # fetch value from keys
     values = fetch_value_from_keys(keys)
     # remove binary value from record
@@ -111,9 +112,9 @@ def export_all_customer():
     final_df = df.rename(columns=CUSTOMER_RENAME)
     # get len dataframe
     n = len(final_df)
-    print("total data: {} records".format(n))
+    Logging.info("total data: {} records".format(n))
     # export to csv
-    print("exporting to csv")
+    Logging.info("exporting to csv")
     cls = S3Service.from_connection()
     cls.write_df_pkl_to_s3(data=final_df, object_name=
     user_path + "customer.pkl")

@@ -8,6 +8,7 @@ from pandas import DataFrame, read_csv
 from io import StringIO, BytesIO
 
 from config.config import AwsConfig
+from utils.logger import Logging
 
 
 class S3Service:
@@ -39,13 +40,14 @@ class S3Service:
         :return: dataframe object pandas
         """
         try:
+            Logging.info(f'Start reading  {object_name}  from  s3')
             content_object = self.resource.Object(self.bucket_name, object_name)
             csv_string = content_object.get()['Body'].read().decode('utf - 8')
             df = read_csv(StringIO(csv_string))
-            print('Successfully read data from s3')
+            Logging.info('Successfully read data from s3 {}'.format(object_name))
             return df
         except Exception as e:
-            print(f"Error while reading {object_name} to S3, Exception: {e}")
+            Logging.error(f"Error while reading {object_name} to S3, Exception: {e}")
 
     def write_csv_to_s3(
             self,
@@ -62,13 +64,14 @@ class S3Service:
         :return:
         """
         try:
+            Logging.info(f'Start dumping {object_name} into s3')
             csv_buffer = StringIO()
             df_to_upload.to_csv(csv_buffer, index=False)
             content_object = self.resource.Object(self.bucket_name, object_name)
             content_object.put(Body=csv_buffer.getvalue())
-            print('Successfully dumped data into s3')
+            Logging.info(f'Successfully dumped {object_name} into s3')
         except Exception as e:
-            print(f"Error while dumping {object_name} to S3, Exception: {e}")
+            Logging.error(f"Error while dumping {object_name} to S3, Exception: {e}")
 
     def write_df_pkl_to_s3(
             self,
@@ -76,18 +79,19 @@ class S3Service:
             data=None
     ) -> None:
         try:
-            file_name = os.path.split(object_name)[1]
-            print("Start dumping " + file_name + " data into s3")
+            Logging.info(f"Start dumping {object_name}  into s3")
             pickle_buffer = BytesIO()
             data.to_pickle(pickle_buffer, compression='gzip')
             self.resource.Object(self.bucket_name, object_name).put(Body=pickle_buffer.getvalue())
-            print("Successfully dumped " + file_name + " data into s3")
+            Logging.info("Successfully dumped {} data into s3".format(object_name))
         except Exception as e:
-            print(f"Error while dumping {object_name} to S3, Exception: {e}")
+            Logging.error(f"Error while dumping {object_name} to S3, Exception: {e}")
 
     def read_pickles_from_s3(self,
                              object_name=None):
         try:
+            Logging.info(f"Start reading {object_name} file from s3")
+
             content_object = self.resource.Object(self.bucket_name, object_name)
             read_file = content_object.get()["Body"].read()
             zipfile = BytesIO(read_file)
@@ -95,7 +99,7 @@ class S3Service:
                 content = gzipfile.read()
 
             loaded_pickle = pickle.loads(content)
-            print("File {} has been read successfully".format(object_name))
+            Logging.info(f"File {object_name} has been read successfully")
             return loaded_pickle
         except Exception as e:
-            print(f"Error while reading {object_name} to S3, Exception: {e}")
+            Logging.error(f"Error while reading {object_name} to S3, Exception: {e}")

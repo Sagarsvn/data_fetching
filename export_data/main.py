@@ -10,8 +10,7 @@ neptune_loader = Config().graph_loader
 def export_data(
         content_with_static: bool = False,
         customer: bool = False,
-        ubd: bool = False,
-        dump_static_data:bool = False):
+        ubd: bool = False):
     """
     fetch all data from
     redis and mongodb

@@ -7,6 +7,7 @@ import re
 
 from config.config import Config, ubd_start_month, ubd_end_month, ubd_path
 from config.constant import UBD_RENAME
+from utils.logger import Logging
 from utils.s3_service import S3Service
 from datetime import datetime
 import calendar
@@ -50,7 +51,7 @@ def genreate_record(cursor, chunk_size):
     temp = DataFrame()
     c = 1
     for chunk in chunks:
-        print("record : ", chunk_size * c)
+        Logging.info(f"record : {chunk_size * c} ")
         df_temp = DataFrame(chunk)
         temp = concat([temp, df_temp])
         c = c + 1
@@ -92,7 +93,7 @@ def get_registered_user_ubd(chunk_size):
                                    object_name=
                                    ubd_path + "registered_ubd_{}.pkl".format(t1.replace("-", "")))
     except Exception as e:
-        print(f"Error while user behaviour data, Exception: {e}")
+        Logging.info(f"Error while user behaviour data, Exception: {e}")
 
 
 def get_anonymous_user_ubd(chunk_size):
@@ -132,16 +133,16 @@ def get_anonymous_user_ubd(chunk_size):
                                    object_name=
                                    ubd_path + "anonymous_ubd_{}.pkl".format(t1.replace("-", "")))
     except Exception as e:
-        print(f"Error while user behaviour data, Exception: {e}")
+        Logging.info(f"Error while user behaviour data, Exception: {e}")
 
 
 def all_ubd_record():
     # get registered user
-    print("exporting  user behaviour data for registered user".center(100, "*"))
+    Logging.info("exporting  user behaviour data for registered user".center(100, "*"))
     get_registered_user_ubd(chunk_size=50000)
 
     # get anonymous user
-    print("exporting  user behaviour data for anonymous user".center(100, "*"))
+    Logging.info("exporting  user behaviour data for anonymous user".center(100, "*"))
     get_anonymous_user_ubd(chunk_size=50000)
 
 

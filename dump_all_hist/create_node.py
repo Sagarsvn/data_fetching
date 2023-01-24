@@ -1,6 +1,7 @@
 import json
 import time
 
+from utils.logger import Logging
 from utils.service.rest import Rest
 
 from config.config import AwsConfig, Config
@@ -28,20 +29,20 @@ class GenerateNode:
 
         response = resp.json()
         queue_id = response["payload"]["loadId"]
-        print("queue id response -> {}".format(queue_id))
+        Logging.info("queue id response -> {}".format(queue_id))
 
         while True:
+            time.sleep(5)
             url = "{}/{}".format(url, queue_id)
-            print(url)
             resp = rest.get(url)
             if resp.status_code != 200:
                 raise Exception("error fetching status neptune")
 
             response = resp.json()
-            print("status neptune -> {}".format(json.dumps(response)))
+            Logging.info("status neptune -> {}".format(json.dumps(response)))
             if response["payload"]["overallStatus"]["status"] != "LOAD_COMPLETED":
-                time.sleep(1)
+                time.sleep(5)
 
             else:
                 break
-        print("data is dumped".center(100, "*"))
+        Logging.info("data is dumped".center(100, "*"))
