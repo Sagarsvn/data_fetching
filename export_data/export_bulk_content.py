@@ -58,7 +58,6 @@ def fetch_all_keys(master_key) -> List[str]:
     # get all keys
     keys = deepcopy(conn.keys(master_key))
     # close connection
-    print(keys)
     conn.close()
     return keys
 
@@ -71,9 +70,8 @@ def fetch_value_from_keys(
     """
     q = []
     for keys in chunk_array_keys(keys):
-
         n = len(keys)
-        print("fetch value from : {} keys".format(n))
+        Logging.info(f"fetch value from : {n} keys")
         # open connection
         conn = create_connection(1)
         # setup pipeline
@@ -84,7 +82,7 @@ def fetch_value_from_keys(
         q += [result.decode("utf-8") for result in p.execute()]
 
         len_q = len(q)
-        print("q now is: {} records".format(len_q))
+        Logging.info(f"q now is: {len_q} records")
         # close connection
         conn.close()
     q = [i.replace('null', 'None') for i in q]
@@ -111,6 +109,8 @@ def fetch_actor():
     cls.write_df_pkl_to_s3(data=actor, object_name=
     static_path + "actor.pkl")
 
+    return actor
+
 
 def fetch_genre():
     """ fetch gernes from redis
@@ -132,6 +132,8 @@ def fetch_genre():
     cls.write_df_pkl_to_s3(data=genre, object_name=
     static_path + "genre.pkl")
 
+    return genre
+
 
 def fetch_writers():
     """ fetch writers from redis
@@ -150,9 +152,10 @@ def fetch_writers():
     n = len(writer)
     Logging.info(f"total data: {n} records")
     # save to s3
-    print("save to s3")
     cls.write_df_pkl_to_s3(data=writer, object_name=
     static_path + "writer.pkl")
+
+    return writer
 
 
 def fetch_directors():
@@ -176,6 +179,7 @@ def fetch_directors():
     cls.write_df_pkl_to_s3(data=director, object_name=
     static_path + "director.pkl")
 
+    return director
 
 def fetch_tv():
     """ fetch clip from tv
@@ -308,4 +312,3 @@ def fetch_all_content_with_static():
 
     Logging.info("fetching program_type".center(100, "*"))
     fetch_program_type()
-

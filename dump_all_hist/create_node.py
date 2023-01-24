@@ -45,4 +45,4 @@ class GenerateNode:
 
             else:
                 break
-        Logging.info("data is dumped".center(100, "*"))
+        Logging.info(f"data is dumped for {key}".center(100, "*"))
