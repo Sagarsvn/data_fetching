@@ -19,14 +19,21 @@ CLIP_REQUIRED = ['id', 'program_id', 'title', 'summary', 'release_date',
 EXTRA_REQUIRED = ['id', 'program_id', 'title', 'summary', 'release_date',
                   'duration', 'expired_date', 'status']
 
-PROGRAM_TYPE_RENAME = dict(id='program_id', title='content_title', summary='content_summary',
-                           starring='actor_id', directors='director_id', genre='genre_id',writers='writer_id')
+PROGRAM_TYPE_RENAME = dict(id='program_id', title='program_title', summary='program_summary',
+                           release_date='program_release_date', expired_date='program_expired_date',
+                           status='program_status', category='program_category',
+                           starring='actor_id', directors='director_id', genre='genre_id', writers='writer_id')
 
-EPISODE_RENAME = dict(id='episode_id', expire_date='expired_date')
+EPISODE_RENAME = dict(id='episode_id', title='episode_title', summary='episode_summary',
+                      release_date='episode_release_date',
+                      expire_date='episode_expire_date', status='episode_status', duration='episode_duration',
+                      season='episode_season', episode='episode_number')
 
-EXTRA_RENAME = dict(id='extra_id')
+EXTRA_RENAME = dict(id='extra_id', title='extra_title', summary='extra_summary', release_date='extra_release_date',
+                    expired_date='extra_expired_date', status='extra_status', duration='extra_duration')
 
-CLIP_RENAME = dict(id='clip_id')
+CLIP_RENAME = dict(id='clip_id', title='clip_title', summary='clip_summary', release_date='clip_release_date',
+                   expired_date='clip_expired_date', status='clip_status', duration='clip_duration')
 
 # static data
 
@@ -47,4 +54,6 @@ WRITER_RENAME = dict(id='writer_id', full_name='writer_name')
 GENRE_RENAME = dict(id='genre_id', name='genre_name')
 
 # user_behaviour_field"
-UBD_RENAME = dict(Viewerid='customer_id', StartTime='created_on', ContentId='content_id', PlayingTime='duration')
+UBD_RENAME = dict(Viewerid='customer_id', StartTime='created_on', PlayingTime='watch_duration'
+                  , ContentType='content_type', ContentId='content_id')
+
