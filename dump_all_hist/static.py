@@ -1,8 +1,10 @@
 import uuid
 
+from rplus_ingestor.static.preprocessing.static import static_data_preprocessing
+
 from config.config import static_loader_path, static_path
 from config.constant_an import ACTOR_AN_RENAME, ACTOR, WRITER, DIRECTOR, GENRE, WRITER_AN_RENAME, DIRECTOR_AN_RENAME, \
-    GENRE_AN_RENAME
+    GENRE_AN_RENAME, PKL, CSV
 from dump_all_hist.create_node import GenerateNode
 from export_data.export_bulk_content import fetch_actor, fetch_writers, fetch_directors, fetch_genre
 from utils.logger import Logging
@@ -25,7 +27,9 @@ class DumpStatic:
                 actor = fetch_actor()
             except:
                 actor = self. \
-                    cls.read_pickles_from_s3(object_name=static_path + ACTOR + '.pkl')
+                    cls.read_pickles_from_s3(object_name=f"{static_path}{ACTOR}{PKL}")
+
+            actor = static_data_preprocessing(actor,ACTOR)
 
             actor = actor.rename(ACTOR_AN_RENAME, axis=1)
 
@@ -35,10 +39,10 @@ class DumpStatic:
             # total length
             Logging.info(f"total record of actor {len(actor)}")
 
-            self.cls.write_csv_to_s3(object_name=static_loader_path + ACTOR + '.csv',
+            self.cls.write_csv_to_s3(object_name=f"{static_loader_path}{ACTOR}{CSV}",
                                      df_to_upload=actor)
 
-            GenerateNode.create_node(key=static_loader_path + ACTOR + '.csv')
+            GenerateNode.create_node(key=f"{static_loader_path}{ACTOR}{CSV}")
 
         except Exception as e:
 
@@ -57,7 +61,9 @@ class DumpStatic:
             except:
 
                 writer = self.cls.read_pickles_from_s3(object_name=
-                                                       static_path + WRITER + '.pkl')
+                                                       f"{static_path}{WRITER}{PKL}")
+
+            writer = static_data_preprocessing(writer, WRITER)
 
             writer = writer.rename(WRITER_AN_RENAME, axis=1)
 
@@ -69,10 +75,10 @@ class DumpStatic:
 
             Logging.info("total record of writer {}".format(len(writer)))
 
-            self.cls.write_csv_to_s3(object_name=static_loader_path + WRITER + '.csv',
+            self.cls.write_csv_to_s3(object_name=f"{static_loader_path}{WRITER}{CSV}",
                                      df_to_upload=writer)
 
-            GenerateNode.create_node(key=static_loader_path + WRITER + '.csv')
+            GenerateNode.create_node(key=f"{static_loader_path}{WRITER}{CSV}")
 
         except Exception as e:
 
@@ -92,7 +98,9 @@ class DumpStatic:
             except:
 
                 director = self.cls.read_pickles_from_s3(
-                    object_name=static_path + DIRECTOR + '.pkl')
+                    object_name=f"{static_path}{DIRECTOR}{PKL}")
+
+            director = static_data_preprocessing(director, DIRECTOR)
 
             director = director.rename(DIRECTOR_AN_RENAME, axis=1)
 
@@ -104,10 +112,10 @@ class DumpStatic:
 
             Logging.info("total record of director {}".format(len(director)))
 
-            self.cls.write_csv_to_s3(object_name=static_loader_path + DIRECTOR + '.csv',
+            self.cls.write_csv_to_s3(object_name=f"{static_loader_path}{DIRECTOR}{CSV}",
                                      df_to_upload=director)
 
-            GenerateNode.create_node(key=static_loader_path + DIRECTOR + '.csv')
+            GenerateNode.create_node(key=f"{static_loader_path}{DIRECTOR}{CSV}")
 
         except Exception as e:
 
@@ -127,7 +135,9 @@ class DumpStatic:
             except:
 
                 genre = self.cls.read_pickles_from_s3(
-                    object_name=static_path + GENRE + '.pkl')
+                    object_name=f"{static_path}{GENRE}{PKL}")
+
+            genre = static_data_preprocessing(genre, GENRE)
 
             genre = genre.rename(GENRE_AN_RENAME, axis=1)
 
@@ -139,10 +149,10 @@ class DumpStatic:
 
             Logging.info("total record of genre {}".format(len(genre)))
 
-            self.cls.write_csv_to_s3(object_name=static_loader_path + GENRE + '.csv',
+            self.cls.write_csv_to_s3(object_name=f'{static_loader_path}{GENRE}{CSV}',
                                      df_to_upload=genre)
 
-            GenerateNode.create_node(key=static_loader_path + GENRE + '.csv')
+            GenerateNode.create_node(key=f'{static_loader_path}{GENRE}{CSV}')
 
         except Exception as e:
             Logging.error(f"unable to dump the {GENRE} data on graph network,{str(e)}")
@@ -163,4 +173,4 @@ class DumpStatic:
         DumpStatic().genre()
 
 
-DumpStatic().dump_static_node()
+

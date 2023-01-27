@@ -75,11 +75,12 @@ def get_registered_user_ubd(chunk_size):
                 "StartTime": {"$nin": [None, "N/A", "", "NA"]},
                 "ContentType": {
                     "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
+                "PercentageComplete": {"$gte": 25},
                 "DataDate": {
                     "$lte": t2,
                     "$gte": t1,
                 }
-            }, {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'ContentId': 1, '_id': False, },
+            }, {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'ContentId': 1, '_id': False,},
                 batch_size=chunk_size
             )
 
@@ -88,7 +89,10 @@ def get_registered_user_ubd(chunk_size):
 
             resp = resp.rename(UBD_RENAME, axis=1)
 
+            Logging.info(f"total records in {t1} {len(resp)}")
+
             resp.reset_index(inplace=True, drop=True)
+
             cls.write_df_pkl_to_s3(data=resp,
                                    object_name=
                                    ubd_path + "registered_ubd_{}.pkl".format(t1.replace("-", "")))
@@ -103,35 +107,36 @@ def get_anonymous_user_ubd(chunk_size):
     try:
         conn = create_connection()
         db_conn = conn["prod-conviva-data"]
-        for t1, t2 in zip(ubd_start_month, ubd_end_month):
-            cursor = db_conn.find(
-                {
-                    "Viewerid": {"$ne": None},
-                    "ContentId": {"$nin": [None, "N/A", "", "NA"]},
-                    "IsLogin": {"$in": ["no", "false", "not login"]},
-                    "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
-                    "StartTime": {"$nin": [None, "N/A", "", "NA"]},
-                    "ContentType": {
-                        "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
-                    "DataDate": {
-                        "$lte": t2,
-                        "$gte": t1,
-                    }
-                },
-                {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'ContentId': 1, '_id': False},
-                batch_size=chunk_size)
+        cursor = db_conn.find(
+            {
+                "Viewerid": {"$ne": None},
+                "ContentId": {"$nin": [None, "N/A", "", "NA"]},
+                "IsLogin": {"$in": ["no", "false", "not login"]},
+                "PlayingTime": {"$nin": [None, "N/A", "", "NA"]},
+                "StartTime": {"$nin": [None, "N/A", "", "NA"]},
+                "ContentType": {
+                    "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
+                "PercentageComplete": {"$gte": 25},
+                "DataDate": {
+                    "$lte": "2022-12-31",
+                    "$gte": "2022-12-01",
+                }
+            },
+            {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'ContentId': 1, '_id': False},
+            batch_size=chunk_size)
 
-            # call genreator function
-            resp = genreate_record(cursor=cursor, chunk_size=chunk_size)
-            # convert list to dataframe
-            resp.reset_index(inplace=True, drop=True)
+        resp = genreate_record(cursor=cursor, chunk_size=chunk_size)
+        # convert list to dataframe
+        resp.reset_index(inplace=True, drop=True)
 
-            # rename cloumn
-            resp = resp.rename(UBD_RENAME, axis=1)
+        # rename cloumn
+        resp = resp.rename(UBD_RENAME, axis=1)
 
-            cls.write_df_pkl_to_s3(data=resp,
-                                   object_name=
-                                   ubd_path + "anonymous_ubd_{}.pkl".format(t1.replace("-", "")))
+        Logging.info(f"total records in {len(resp)}")
+
+        cls.write_df_pkl_to_s3(data=resp,
+                               object_name=
+                               ubd_path + "anonymous_ubd_{}.pkl".format("2022-12-01".replace("-", "")))
     except Exception as e:
         Logging.info(f"Error while user behaviour data, Exception: {e}")
 
@@ -144,5 +149,3 @@ def all_ubd_record():
     # get anonymous user
     Logging.info("exporting  user behaviour data for anonymous user".center(100, "*"))
     get_anonymous_user_ubd(chunk_size=50000)
-
-

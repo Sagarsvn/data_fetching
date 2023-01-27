@@ -50,6 +50,7 @@ content_path = "historical_data/content/raw/{}/".format(date_to_save)
 user_path = "historical_data/user/raw/{}/".format(date_to_save)
 static_path = "historical_data/static/raw/{}/".format(date_to_save)
 static_loader_path = "historical_data/static/loader_csv/{}/".format(date_to_save)
+content_loader_path = "historical_data/content/loader_csv/{}/".format(date_to_save)
 ubd_path = "ubd/{}/".format(date_to_save)
 ubd_start_month = ["2022-07-01", "2022-08-01", "2022-09-01", "2022-10-01", "2022-11-01", "2022-12-01", "2023-01-01"]
 ubd_end_month = ["2022-07-31", "2022-08-31", "2022-09-30", "2022-10-31", "2022-11-30", "2022-12-31", "2023-01-16"]
