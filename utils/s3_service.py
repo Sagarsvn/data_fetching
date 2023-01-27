@@ -99,7 +99,7 @@ class S3Service:
                 content = gzipfile.read()
 
             loaded_pickle = pickle.loads(content)
-            Logging.info(f"File {object_name} has been read successfully")
+            Logging.info(f"File {self.bucket_name}/{object_name} has been read successfully")
             return loaded_pickle
         except Exception as e:
             Logging.error(f"Error while reading {self.bucket_name}/{object_name} to S3, Exception: {e}")

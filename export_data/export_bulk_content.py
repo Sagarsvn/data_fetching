@@ -215,7 +215,9 @@ def fetch_clip():
     n = len(clip)
     Logging.info(f"total data: {n} records")
     cls.write_df_pkl_to_s3(data=clip,
-                           object_name=static_path + "clip.pkl")
+                           object_name=content_path + "clip.pkl")
+
+    return clip
 
 
 def fetch_extra():
@@ -237,7 +239,9 @@ def fetch_extra():
     Logging.info(f"total data: {n} records")
     # save to s3
     cls.write_df_pkl_to_s3(data=extra, object_name=
-    static_path + "extra.pkl")
+    content_path + "extra.pkl")
+
+    return extra
 
 
 def fetch_episode():
@@ -259,7 +263,9 @@ def fetch_episode():
     Logging.info(f"total data: {n} records")
     # save to s3
     cls.write_df_pkl_to_s3(data=episode, object_name=
-    static_path + "episode.pkl")
+    content_path + "episode.pkl")
+
+    return episode
 
 
 def fetch_program_type():
@@ -282,6 +288,8 @@ def fetch_program_type():
     # save to s3
     cls.write_df_pkl_to_s3(data=program, object_name=
     content_path + "program.pkl")
+
+    return program
 
 
 def fetch_all_content_with_static():
