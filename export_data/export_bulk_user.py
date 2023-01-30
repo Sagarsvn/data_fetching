@@ -119,6 +119,8 @@ def export_all_customer():
     cls.write_df_pkl_to_s3(data=final_df, object_name=
     user_path + "customer.pkl")
 
+    return df
+
 
 
 

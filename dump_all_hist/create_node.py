@@ -24,21 +24,27 @@ class GenerateNode:
             "updateSingleCardinalityProperties": "FALSE",
         }
         resp = rest.post(url, payload=payload)
+        time.sleep(2)
         if resp.status_code != 200:
             raise Exception("Error to post neptune -> ", resp.json())
 
+        time.sleep(2)
         response = resp.json()
+        time.sleep(3)
         queue_id = response["payload"]["loadId"]
         Logging.info("queue id response -> {}".format(queue_id))
 
         while True:
-            time.sleep(5)
+            time.sleep(3)
             url = "{}/{}".format(url, queue_id)
+            time.sleep(3)
             resp = rest.get(url)
+
             if resp.status_code != 200:
                 raise Exception("error fetching status neptune")
 
             response = resp.json()
+            time.sleep(3)
             Logging.info("status neptune -> {}".format(json.dumps(response)))
             if response["payload"]["overallStatus"]["status"] != "LOAD_COMPLETED":
                 time.sleep(5)
