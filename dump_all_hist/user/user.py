@@ -6,6 +6,7 @@ from rplus_ingestor.user.preprocessing.user import PreprocessUser
 from config.config import user_path, user_loader_path
 from config.constant_an import USER_AN_RENAME, USER, USER_AN_REQUIRED, CUSTOMER_PREFERENCE, CSV
 from dump_all_hist.create_node import GenerateNode
+from dump_all_hist.static import DumpStatic
 from export_data.export_bulk_user import export_all_customer
 from utils.logger import Logging
 from utils.s3_service import S3Service
@@ -17,6 +18,17 @@ class DumpUser:
     ):
 
         self.cls = S3Service.from_connection()
+
+    def dump_genre(
+            self
+    ):
+        """
+        Dump Static
+        Genre
+        """
+
+        DumpStatic().genre()
+
 
     def fetch_data(
             self
@@ -38,6 +50,8 @@ class DumpUser:
     def dump_user_on_graph(
             self
     ):
+
+        DumpUser.dump_genre()
 
         user = DumpUser().fetch_data()
 
