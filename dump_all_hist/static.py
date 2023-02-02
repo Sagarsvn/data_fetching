@@ -170,6 +170,8 @@ class DumpStatic:
 
         DumpStatic().director()
 
+        DumpStatic().genre()
+
 
 
 

@@ -1,16 +1,16 @@
-from itertools import chain
+
 from urllib.parse import quote_plus
 
 import pymongo
 from pandas import DataFrame, concat
 import re
 
-from config.config import Config, ubd_start_month, ubd_end_month, ubd_path
-from config.constant import UBD_RENAME
+from config.config import Config, registered_ubd_start_month, registered_ubd_end_month, ubd_path, anonymous_ubd_end_date, \
+    anonymous_ubd_start_date
+from config.constant import UBD_RENAME, UBD_DROP
 from utils.logger import Logging
 from utils.s3_service import S3Service
-from datetime import datetime
-import calendar
+
 
 DB_URI = '''mongodb://{user}:{password}@localhost:27018/conviva?authSource=conviva&directConnection=true'''.format(
     user=Config().mongodb_user,
@@ -66,7 +66,7 @@ def get_registered_user_ubd(chunk_size):
     try:
         db_conn = create_connection()
         db_conn = db_conn["prod-conviva-data"]
-        for t1, t2 in zip(ubd_start_month, ubd_end_month):
+        for t1, t2 in zip(registered_ubd_start_month, registered_ubd_end_month):
             cursor = db_conn.find({
                 "Viewerid": {"$ne": None},
                 "ContentId": {"$nin": [None, "N/A", "", "NA"]},
@@ -87,15 +87,24 @@ def get_registered_user_ubd(chunk_size):
             # call genreator function
             resp = genreate_record(cursor=cursor, chunk_size=chunk_size)
 
+            # rename column name
             resp = resp.rename(UBD_RENAME, axis=1)
 
-            Logging.info(f"total records in {t1} {len(resp)}")
-
+            # reset index
             resp.reset_index(inplace=True, drop=True)
 
+            # drop duplicates based same column
+            resp = resp.drop_duplicates(
+                subset=UBD_DROP, ignore_index=True
+            )
+            Logging.info(f"total records in {t1} {len(resp)}")
+
+            # save to s3
             cls.write_df_pkl_to_s3(data=resp,
                                    object_name=
-                                   ubd_path + "registered_ubd_{}.pkl".format(t1.replace("-", "")))
+                                   ubd_path + "registered_ubd_{}.pkl"
+                                   .format(t1.replace("-", ""))
+                                   )
     except Exception as e:
         Logging.info(f"Error while user behaviour data, Exception: {e}")
 
@@ -118,25 +127,32 @@ def get_anonymous_user_ubd(chunk_size):
                     "$in": [re.compile("episode"), re.compile("clip"), re.compile("extra")]},
                 "PercentageComplete": {"$gte": 25},
                 "DataDate": {
-                    "$lte": "2022-12-31",
-                    "$gte": "2022-12-01",
+                    "$lte":anonymous_ubd_end_date,
+                    "$gte": anonymous_ubd_start_date,
                 }
             },
             {"Viewerid": 1, "StartTime": 1, "PlayingTime": 1, "ContentType": 1, 'ContentId': 1, '_id': False},
             batch_size=chunk_size)
 
         resp = genreate_record(cursor=cursor, chunk_size=chunk_size)
-        # convert list to dataframe
-        resp.reset_index(inplace=True, drop=True)
-
         # rename cloumn
         resp = resp.rename(UBD_RENAME, axis=1)
+
+        # reset index
+        resp.reset_index(inplace=True, drop=True)
+
+        # drop duplicates based same column
+        resp = resp.drop_duplicates(
+            subset=UBD_DROP, ignore_index=True
+        )
 
         Logging.info(f"total records in {len(resp)}")
 
         cls.write_df_pkl_to_s3(data=resp,
                                object_name=
-                               ubd_path + "anonymous_ubd_{}.pkl".format("2022-12-01".replace("-", "")))
+                               ubd_path + "anonymous_ubd_{}.pkl"
+                               .format(anonymous_ubd_start_date.replace("-", ""))
+                               )
     except Exception as e:
         Logging.info(f"Error while user behaviour data, Exception: {e}")
 

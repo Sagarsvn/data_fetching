@@ -1,6 +1,5 @@
 import uuid
 
-import pandas as pd
 from rplus_ingestor.user.preprocessing.user import PreprocessUser
 
 from config.config import user_path, user_loader_path
@@ -18,17 +17,6 @@ class DumpUser:
     ):
 
         self.cls = S3Service.from_connection()
-
-    def dump_genre(
-            self
-    ):
-        """
-        Dump Static
-        Genre
-        """
-
-        DumpStatic().genre()
-
 
     def fetch_data(
             self
@@ -50,8 +38,6 @@ class DumpUser:
     def dump_user_on_graph(
             self
     ):
-
-        DumpUser.dump_genre()
 
         user = DumpUser().fetch_data()
 
