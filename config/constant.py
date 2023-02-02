@@ -57,3 +57,4 @@ GENRE_RENAME = dict(id='genre_id', name='genre_name')
 UBD_RENAME = dict(Viewerid='customer_id', StartTime='created_on', PlayingTime='watch_duration'
                   , ContentType='content_type', ContentId='content_id')
 
+UBD_DROP = ['customer_id', 'created_on', 'content_id', 'content_type', 'watch_duration']
