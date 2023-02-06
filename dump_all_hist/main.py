@@ -4,15 +4,17 @@ from dump_all_hist.content.extra import DumpExtra
 from dump_all_hist.content.program import DumpProgram
 from dump_all_hist.content.relationship import ProgramRelationship
 from dump_all_hist.static import DumpStatic
+from dump_all_hist.user.has_preference import HasPreferenceNode
+from dump_all_hist.user.user import DumpUser
 from utils.logger import Logging
 
 
 def create_node_on_graph(
         static_node: bool = False,
-        content_node:bool = False,
-        program_relationship:bool =False,
-        user_node:bool = False,
-        user_preference_node:bool = False
+        content_node: bool = False,
+        program_relationship: bool = False,
+        user_node: bool = False,
+        user_preference_node: bool = False
 ):
     if static_node:
         Logging.info("dump all static node in graph ".center(100, "*"))
@@ -51,7 +53,6 @@ def create_node_on_graph(
         DumpProgram().dump_program_on_graph()
 
     if program_relationship:
-
         Logging.info(
             "Start Dumping of program relationship network".center(
                 100, "*"
@@ -59,6 +60,22 @@ def create_node_on_graph(
         )
         ProgramRelationship().dump_relationship()
 
+    if user_node:
+        Logging.info(
+            "Start Dumping of user on graph".center(
+                100, "*"
+            )
+        )
+        DumpUser().dump_user_on_graph()
+
+    if user_preference_node:
+
+        Logging.info(
+            "Start Dumping of user on graph".center(
+                100, "*"
+            )
+        )
+        HasPreferenceNode().has_preference()
 
 
 

@@ -32,40 +32,40 @@ EXTRA_AN_RENAME = dict(extra_id='extra_id:String', extra_title='extra_title:Stri
                        extra_duration='extra_duration:Int')
 
 # PROGRAM
-PROGRAM_DEPENDENCIES = ['~id', 'actor_id', 'director_id', 'writer_id', 'genre_id','program_id']
+PROGRAM_DEPENDENCIES = ['~id', 'actor_id', 'director_id', 'writer_id', 'genre_id', 'program_id']
 
 PROGRAM_DEPENDENCIES_DROP_COLUMN = ['actor_id', 'director_id', 'writer_id', 'genre_id']
 
 ACTOR_DEPENDENCIES_RENAME = {'actor_id:String': 'actor_id', '~id': '~to'}
 
-ACTOR_DEPENDENCIES_REQUIRED = ['actor_id','~to']
+ACTOR_DEPENDENCIES_REQUIRED = ['actor_id', '~to']
 
-WRITER_DEPENDENCIES_REQUIRED = ['writer_id','~to']
+WRITER_DEPENDENCIES_REQUIRED = ['writer_id', '~to']
 
 WRITER_DEPENDENCIES_RENAME = {'writer_id:String': 'writer_id', '~id': '~to'}
 
 GENRE_DEPENDENCIES_RENAME = {'genre_id:String': 'genre_id', '~id': '~to'}
 
-GENRE_DEPENDENCIES_REQUIRED = ['genre_id','~to']
+GENRE_DEPENDENCIES_REQUIRED = ['genre_id', '~to']
 
 DIRECTOR_DEPENDENCIES_RENAME = {'director_id:String': 'director_id', '~id': '~to'}
 
-DIRECTOR_DEPENDENCIES_REQUIRED = ['director_id','~to']
+DIRECTOR_DEPENDENCIES_REQUIRED = ['director_id', '~to']
 
 CLIP_DEPENDENCIES_RENAME = {'program_id:String': 'program_id', '~id': '~to'}
 
-CLIP_DEPENDENCIES_REQUIRED = ['program_id','~to']
+CLIP_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 
 EPISODE_DEPENDENCIES_RENAME = {'program_id:String': 'program_id', '~id': '~to'}
 
-EPISODE_DEPENDENCIES_REQUIRED = ['program_id','~to']
+EPISODE_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 
 EXTRA_DEPENDENCIES_RENAME = {'program_id:String': 'program_id', '~id': '~to'}
 
-EXTRA_DEPENDENCIES_REQUIRED = ['program_id','~to']
+EXTRA_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 
 # USER
-USER_AN_RENAME = dict(customer_id='customer_id:String', birth_date='birth_date:string', gender='gender:String',
+USER_AN_RENAME = dict(customer_id='customer_id:String', gender='gender:String',
                       customer_status='customer_status:String', customer_created_on='customer_created_on:String',
                       customer_updated_on='customer_updated_on:String', age='age:Int')
 
@@ -79,7 +79,7 @@ GENRE_RENAME = {'~id': '~to', 'genre_id:String': 'genre_id'}
 
 GENRE_REQUIRED = ['~to', 'genre_id']
 
-CUSTOMER_PREFERENCE = 'customer_pereferences'
+CUSTOMER_PREFERENCE = 'customer_preferences'
 
 GENRE_ID = 'genre_id'
 INNER = "inner"
@@ -93,7 +93,6 @@ EPISODE = "episode"
 CLIP = "clip"
 EXTRA = "extra"
 USER = "user"
-HAS_PREFERENCE = 'HAS_PREFERENCE'
 HAS_ACTOR = "HAS_ACTOR"
 HAS_GENRE = 'HAS_GENRE'
 HAS_DIRECTOR = 'HAS_DIRECTOR'
@@ -101,6 +100,11 @@ HAS_WRITER = 'HAS_WRITER'
 HAS_EPISODE = 'HAS_EPISODE'
 HAS_EXTRA = 'HAS_EXTRA'
 HAS_CLIP = 'HAS_CLIP'
+HAS_PREFERENCE_1 = 'has_preference_1'
+HAS_PREFERENCE_2 = 'has_preference_2'
+HAS_PREFERENCE_3 = 'has_preference_3'
 # Extension
 CSV = '.csv'
 PKL = '.pkl'
+# Variable
+FROM = '~from'

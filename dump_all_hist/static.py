@@ -1,8 +1,9 @@
 import uuid
 
+from pandas import DataFrame
 from rplus_ingestor.static.preprocessing.static import static_data_preprocessing
 
-from config.config import static_loader_path, static_path
+from config.config import static_loader_path, static_path, genre_missing_id
 from config.constant_an import ACTOR_AN_RENAME, ACTOR, WRITER, DIRECTOR, GENRE, WRITER_AN_RENAME, DIRECTOR_AN_RENAME, \
     GENRE_AN_RENAME, PKL, CSV
 from dump_all_hist.create_node import GenerateNode
@@ -136,6 +137,10 @@ class DumpStatic:
 
                 genre = self.cls.read_pickles_from_s3(
                     object_name=f"{static_path}{GENRE}{PKL}")
+
+            genre_missing_record = DataFrame(genre_missing_id)
+
+            genre = genre.append(genre_missing_record, ignore_index=True)
 
             genre = static_data_preprocessing(genre, GENRE)
 

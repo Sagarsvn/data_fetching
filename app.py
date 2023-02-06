@@ -12,7 +12,6 @@ if __name__ == "__main__":
     parser.add_argument("-user_preference_node", "--user_preference_node", type=int, default=0)
 
     args = parser.parse_args()
-
     create_node_on_graph(static_node=args.static_node or False,
                          content_node=args.content_node or False,
                          program_relationship=args.program_relationship or False,
