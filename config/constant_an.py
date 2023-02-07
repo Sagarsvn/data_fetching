@@ -79,7 +79,27 @@ GENRE_RENAME = {'~id': '~to', 'genre_id:String': 'genre_id'}
 
 GENRE_REQUIRED = ['~to', 'genre_id']
 
-CUSTOMER_PREFERENCE = 'customer_preferences'
+UBD_GROUP_BY = ['customer_id', 'content_type', 'content_id']
+
+USER_CUSTOMER_RENAME = { "customer_id:String":"customer_id","~id":"~from"}
+
+USER_CUSTOMER_REQUIRED = ["customer_id:String","~id"]
+
+EPISODE_GRAPH_RENAME = { "episode_id:String":"episode_id","~id":"~to"}
+
+EPISODE_GRAPH_REQUIRED = ["episode_id:String","~id"]
+
+CLIP_GRAPH_REQUIRED = ["clip_id:String","~id"]
+
+CLIP_GRAPH_RENAME = { "clip_id:String":"clip_id","~id":"~to"}
+
+EXTRA_GRAPH_REQUIRED = ["extra_id:String","~id"]
+
+EXTRA_GRAPH_RENAME = {"extra_id:String":"extra_id","~id":"~to"}
+
+VIEWED_REQUIRED  = ["view_frequency","watch_duration","created_on","~from","~to"]
+
+VIEWED_RENAME = {"view_frequency":"view_frequency:Int","watch_duration" :"watch_duration:Int","created_on" :"created_on:String"}
 
 GENRE_ID = 'genre_id'
 INNER = "inner"
@@ -103,8 +123,16 @@ HAS_CLIP = 'HAS_CLIP'
 HAS_PREFERENCE_1 = 'has_preference_1'
 HAS_PREFERENCE_2 = 'has_preference_2'
 HAS_PREFERENCE_3 = 'has_preference_3'
+VIEWED = "VIEWED"
 # Extension
 CSV = '.csv'
 PKL = '.pkl'
 # Variable
 FROM = '~from'
+CUSTOMER_ID ="customer_id"
+VIEW_FREQUENCY ="view_frequency"
+DURATION ="duration"
+CREATED_ON ="created_on"
+VIEW_HISTORY ="view_history"
+CUSTOMER_PREFERENCE = 'customer_preferences'
+CONTENT_ID ="content_id"

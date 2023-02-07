@@ -6,6 +6,7 @@ from dump_all_hist.content.relationship import ProgramRelationship
 from dump_all_hist.static import DumpStatic
 from dump_all_hist.user.has_preference import HasPreferenceNode
 from dump_all_hist.user.user import DumpUser
+from dump_all_hist.user.viewed import DumpViewed
 from utils.logger import Logging
 
 
@@ -14,7 +15,8 @@ def create_node_on_graph(
         content_node: bool = False,
         program_relationship: bool = False,
         user_node: bool = False,
-        user_preference_node: bool = False
+        user_preference_node: bool = False,
+        user_viewed_node:bool = False
 ):
     if static_node:
         Logging.info("dump all static node in graph ".center(100, "*"))
@@ -76,6 +78,14 @@ def create_node_on_graph(
             )
         )
         HasPreferenceNode().has_preference()
+
+    if user_viewed_node:
+        Logging.info(
+            "Start Dumping of user viwed on graph".center(
+                100, "*"
+            )
+        )
+        DumpViewed().viewed_relationship()
 
 
 

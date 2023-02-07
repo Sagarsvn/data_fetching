@@ -224,7 +224,6 @@ class ProgramRelationship:
             Logging.error(f"Unable to merge {merge_on} dependecies csv,{str(e)}")
 
         try:
-
             has_dependencies["~id"] = has_dependencies.apply(
                 lambda _: str(uuid.uuid4()), axis=1)
 
