@@ -35,9 +35,6 @@ class DumpViewed:
             return view count and
             duration and created_on
             """
-            Logging.info(
-                "preprocessing of ubd".center(100, "*")
-            )
             ubd = ubd_data_preprocessing(
                 ubd
             )
@@ -66,7 +63,7 @@ class DumpViewed:
         to find vertex id
         """
 
-        user_history = self.cls.read_csv_to_s3(
+        user_history = self.cls.read_csv_from_s3(
             object_name=f'{user_loader_path}user_history.csv')
         user_history = user_history[USER_CUSTOMER_REQUIRED].\
             rename(USER_CUSTOMER_RENAME, axis=1)
@@ -252,4 +249,3 @@ class DumpViewed:
 
 
 
-DumpViewed().get_ubd()

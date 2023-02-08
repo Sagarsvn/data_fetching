@@ -28,7 +28,7 @@ class HasPreferenceNode:
         from s3
         """
         try:
-            user_pref = self.cls.read_csv_to_s3(
+            user_pref = self.cls.read_csv_from_s3(
                 object_name=f'{user_loader_path}{CUSTOMER_PREFERENCE}{CSV}')
 
             Logging.info(f"Start exploding {GENRE_ID}".center(100, '*'))
@@ -157,6 +157,3 @@ class HasPreferenceNode:
         self.dump_has_preference(
             user_pref[[FROM, HAS_PREFERENCE_3]], label=HAS_PREFERENCE_3
         )
-
-
-

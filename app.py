@@ -7,9 +7,9 @@ if __name__ == "__main__":
     parser.add_argument("-dsn", "--static-node", type=int, default=0)
     parser.add_argument("-dcn", "--content-node", type=int, default=0)
     parser.add_argument("-dpr", "--program_relationship", type=int, default=0)
-    parser.add_argument("-user_node", "--user_node", type=int, default=0)
-    parser.add_argument("-user_preference_node", "--user_preference_node", type=int, default=0)
-    parser.add_argument("-user_viewed_node", "--user_viwed_node", type=int, default=0)
+    parser.add_argument("-un", "--user-node", type=int, default=0)
+    parser.add_argument("-upn", "--user-preference-node", type=int, default=0)
+    parser.add_argument("-uvn", "--user-viewed-node", type=int, default=0)
 
     args = parser.parse_args()
     create_node_on_graph(static_node=args.static_node or False,
