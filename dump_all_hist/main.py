@@ -4,6 +4,7 @@ from dump_all_hist.content.extra import DumpExtra
 from dump_all_hist.content.program import DumpProgram
 from dump_all_hist.content.relationship import ProgramRelationship
 from dump_all_hist.static import DumpStatic
+from dump_all_hist.user.anonymous_user import AnonymousUser
 from dump_all_hist.user.has_preference import HasPreferenceNode
 from dump_all_hist.user.user import DumpUser
 from dump_all_hist.user.viewed import DumpViewed
@@ -16,7 +17,8 @@ def create_node_on_graph(
         program_relationship: bool = False,
         user_node: bool = False,
         user_preference_node: bool = False,
-        user_viewed_node:bool = False
+        user_viewed_node:bool = False,
+        anonymous_viewed_node:bool = False
 ):
     if static_node:
         Logging.info("dump all static node in graph ".center(100, "*"))
@@ -86,6 +88,15 @@ def create_node_on_graph(
             )
         )
         DumpViewed().viewed_relationship()
+
+
+    if anonymous_viewed_node:
+        Logging.info(
+            "Start Dumping of anonymous user viwed on graph".center(
+                100, "*"
+            )
+        )
+        AnonymousUser().viewed_relationship()
 
 
 

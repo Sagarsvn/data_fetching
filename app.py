@@ -10,6 +10,7 @@ if __name__ == "__main__":
     parser.add_argument("-un", "--user-node", type=int, default=0)
     parser.add_argument("-upn", "--user-preference-node", type=int, default=0)
     parser.add_argument("-uvn", "--user-viewed-node", type=int, default=0)
+    parser.add_argument("-avn", "--anonymous-viewed-node", type=int, default=0)
 
     args = parser.parse_args()
     create_node_on_graph(static_node=args.static_node or False,
@@ -17,5 +18,6 @@ if __name__ == "__main__":
                          program_relationship=args.program_relationship or False,
                          user_node=args.user_node or False,
                          user_preference_node=args.user_preference_node or False,
-                         user_viewed_node=args.user_viewed_node or False)
+                         user_viewed_node=args.user_viewed_node or False,
+                         anonymous_viewed_node=args.anonymous_viewed_node or False)
 
