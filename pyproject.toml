@@ -17,6 +17,9 @@ classifiers=[
 ]
 
 [tool.poetry.dependencies]
+rplus-constants-module = ">=0.1.6"
+rplus-utils-module = ">=0.1.3"
+rplus-ingestor-module =">=0.0.5
 python = ">=3.8,<3.11"
 pandas = "^1.5.1"
 pymongo = "^4.3.2"
