@@ -1,7 +1,8 @@
 import uuid
 
-from pandas import DataFrame, concat, merge
+from pandas import DataFrame, concat, merge, read_csv
 from rplus_ingestor.user.preprocessing.ubd import ubd_data_preprocessing
+from rplus_ingestor.user.rating.rating import RegisterUserRating
 
 from config.config import ubd_path, content_loader_path, user_loader_path, ubd_loader_path, registered_ubd_start_month
 from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
@@ -10,11 +11,12 @@ from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     VIEWED, UBD_GROUP_BY, CONTENT_ID
 from dump_all_hist.create_node import GenerateNode
 from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on
+
 from utils.logger import Logging
 from utils.s3_service import S3Service
 
 
-class DumpViewed:
+class RegisterViewed:
 
     def __init__(self):
         self.cls = S3Service.from_connection()
@@ -132,6 +134,10 @@ class DumpViewed:
             how=INNER,
             left_on=CONTENT_ID,
             right_on="{}_id".format(key))
+
+        ubd_map = RegisterUserRating().calculate_rating(
+            ubd_map,"registered_user"
+        )
 
         ubd_map = ubd_map[VIEWED_REQUIRED].rename(VIEWED_RENAME, axis=1)
 
