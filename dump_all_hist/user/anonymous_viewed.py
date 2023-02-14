@@ -9,7 +9,7 @@ from config.config import ubd_path, content_loader_path, user_loader_path, ubd_l
 from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     EXTRA, INNER, USER_CUSTOMER_RENAME, USER_CUSTOMER_REQUIRED, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
-    VIEWED, UBD_GROUP_BY, CONTENT_ID, USER, DEFAULT_CLUSTER_ID
+    VIEWED, UBD_GROUP_BY, CONTENT_ID, USER, DEFAULT_CLUSTER_ID, ANONYMOUS
 from dump_all_hist.create_node import GenerateNode
 from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on
 
@@ -27,7 +27,7 @@ class AnonymousViewed:
     def create_anonymous_user_node(
             self
     ):
-        property = {"customer_id:String": "anonymous",
+        property = {"customer_id:String": ANONYMOUS,
                     "age:Int": 30,
                     "customer_status:String": "activated",
                     "customer_created_on:String": "2023-01-01T00:00:00+00:00",
@@ -168,7 +168,7 @@ class AnonymousViewed:
             right_on="{}_id".format(key))
 
         ubd_map = RegisterUserRating().calculate_rating(
-            ubd_map,"anonymous_user"
+            ubd_map,"{}_{}".format(ANONYMOUS,USER)
         )
 
         ubd_map = ubd_map[VIEWED_REQUIRED].rename(VIEWED_RENAME, axis=1)

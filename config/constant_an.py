@@ -138,3 +138,6 @@ VIEW_HISTORY = "view_history"
 CUSTOMER_PREFERENCE = 'customer_preferences'
 CONTENT_ID = "content_id"
 DEFAULT_CLUSTER_ID = -999
+ANONYMOUS = "anonymous"
+REGISTERED_USER = "registered_user"
+

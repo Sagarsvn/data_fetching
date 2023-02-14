@@ -8,7 +8,7 @@ from config.config import ubd_path, content_loader_path, user_loader_path, ubd_l
 from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     EXTRA, INNER, USER_CUSTOMER_RENAME, USER_CUSTOMER_REQUIRED, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
-    VIEWED, UBD_GROUP_BY, CONTENT_ID
+    VIEWED, UBD_GROUP_BY, CONTENT_ID, REGISTERED_USER
 from dump_all_hist.create_node import GenerateNode
 from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on
 
@@ -136,7 +136,7 @@ class RegisterViewed:
             right_on="{}_id".format(key))
 
         ubd_map = RegisterUserRating().calculate_rating(
-            ubd_map,"registered_user"
+            ubd_map,REGISTERED_USER
         )
 
         ubd_map = ubd_map[VIEWED_REQUIRED].rename(VIEWED_RENAME, axis=1)
