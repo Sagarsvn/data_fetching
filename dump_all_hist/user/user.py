@@ -1,10 +1,9 @@
 import uuid
 
-import pandas as pd
 from rplus_ingestor.user.preprocessing.user import PreprocessUser
 
 from config.config import user_path, user_loader_path
-from config.constant_an import USER_AN_RENAME, USER, USER_AN_REQUIRED, CUSTOMER_PREFERENCE, CSV
+from config.constant_an import USER_AN_RENAME, USER, USER_AN_REQUIRED, CUSTOMER_PREFERENCE, CSV, DEFAULT_CLUSTER_ID
 from dump_all_hist.create_node import GenerateNode
 from export_data.export_bulk_user import export_all_customer
 from utils.logger import Logging
@@ -65,6 +64,7 @@ class DumpUser:
         Logging.info(
             f"Creating user loader csv ".center(100, "*")
         )
+        user['cluster_id:Int'] = DEFAULT_CLUSTER_ID
 
         user["~id"] = user.apply(
             lambda _: str(uuid.uuid4()),

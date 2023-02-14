@@ -47,7 +47,7 @@ class Config(BaseSettings):
 
 genre_missing_id = {"genre_id": ['74', '89', '94'],
                     "genre_name": ["Excersice", "Sport Highlights", "Misteri"]}
-date_to_save = "20230120"
+date_to_save = "20230214"
 content_path = "historical_data/content/raw/{}/".format(date_to_save)
 user_path = "historical_data/user/raw/{}/".format(date_to_save)
 user_loader_path = "historical_data/user/loader_csv/{}/".format(date_to_save)

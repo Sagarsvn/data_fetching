@@ -42,14 +42,14 @@ def chunk_array_keys(
     return [keys[i: i + chunk_size] for i in range(0, len(keys), chunk_size)]
 
 
-def fetch_all_keys() -> List[str]:
+def fetch_all_keys(master_key) -> List[str]:
     """Fetch all keys only from redis
     :return: list of all keys in redis
     """
     # open connection
     conn = create_connection(0)
     # get all keys
-    keys = deepcopy(conn.keys())
+    keys = deepcopy(conn.keys(master_key))
     # close connection
     conn.close()
     return keys
@@ -98,7 +98,7 @@ def export_all_customer():
     """Export data from db 0"""
     Logging.info("fetching all customer data".center(100, "*"))
     # get all keys
-    keys = fetch_all_keys()
+    keys = fetch_all_keys(b'user:detail:*')
     Logging.info(keys)
     # fetch value from keys
     values = fetch_value_from_keys(keys)

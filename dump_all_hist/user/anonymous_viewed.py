@@ -2,20 +2,22 @@ import uuid
 
 from pandas import DataFrame, concat, merge
 from rplus_ingestor.user.preprocessing.ubd import ubd_data_preprocessing
+from rplus_ingestor.user.rating.rating import RegisterUserRating
 
 from config.config import ubd_path, content_loader_path, user_loader_path, ubd_loader_path, registered_ubd_start_month, \
     anonymous_ubd_start_date
 from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     EXTRA, INNER, USER_CUSTOMER_RENAME, USER_CUSTOMER_REQUIRED, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
-    VIEWED, UBD_GROUP_BY, CONTENT_ID, USER
+    VIEWED, UBD_GROUP_BY, CONTENT_ID, USER, DEFAULT_CLUSTER_ID
 from dump_all_hist.create_node import GenerateNode
 from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on
+
 from utils.logger import Logging
 from utils.s3_service import S3Service
 
 
-class AnonymousUser:
+class AnonymousViewed:
 
     def __init__(
             self
@@ -30,7 +32,8 @@ class AnonymousUser:
                     "customer_status:String": "activated",
                     "customer_created_on:String": "2023-01-01T00:00:00+00:00",
                     "customer_updated_on:String": "2023-01-01T00:00:00+00:00",
-                    "gender:String": "nan"
+                    "gender:String": "nan",
+                    "cluster_id:Int": DEFAULT_CLUSTER_ID
                     }
 
         anonymous_user = DataFrame([property])
@@ -56,7 +59,7 @@ class AnonymousUser:
         ubd = self.cls.read_pickles_from_s3(
             object_name=f"{ubd_path}anonymous_ubd_{anonymous_ubd_start_date.replace('-', '')}{PKL}")
 
-        ubd[CUSTOMER_ID] = 'anonymous_user'
+        ubd[CUSTOMER_ID] = 'anonymous'
         return ubd
 
     @staticmethod
@@ -163,6 +166,10 @@ class AnonymousUser:
             how=INNER,
             left_on=CONTENT_ID,
             right_on="{}_id".format(key))
+
+        ubd_map = RegisterUserRating().calculate_rating(
+            ubd_map,"anonymous_user"
+        )
 
         ubd_map = ubd_map[VIEWED_REQUIRED].rename(VIEWED_RENAME, axis=1)
 
@@ -283,6 +290,7 @@ class AnonymousUser:
         Logging.info("dumping VIEWED relationship".center(100, "*"))
 
         self.dump_viewed(final_viewed)
+
 
 
 
