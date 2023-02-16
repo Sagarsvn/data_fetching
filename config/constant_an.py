@@ -79,28 +79,36 @@ GENRE_RENAME = {'~id': '~to', 'genre_id:String': 'genre_id'}
 
 GENRE_REQUIRED = ['~to', 'genre_id']
 
-UBD_GROUP_BY = ['customer_id', 'content_type', 'content_id']
+UBD_GROUP_BY = ['customer_id', '~from','content_type', 'content_id']
 
-USER_CUSTOMER_RENAME = { "customer_id:String":"customer_id","~id":"~from"}
+USER_CUSTOMER_RENAME = {"customer_id:String": "customer_id", "~id": "~from"}
 
-USER_CUSTOMER_REQUIRED = ["customer_id:String","~id"]
+USER_CUSTOMER_REQUIRED = ["customer_id:String", "~id"]
 
-EPISODE_GRAPH_RENAME = { "episode_id:String":"episode_id","~id":"~to","episode_duration:Int":"content_duration"}
+PROGRAM_GRAPH_REQUIRED = ["program_id:String", "~id"]
 
-EPISODE_GRAPH_REQUIRED = ["episode_id:String","~id","episode_duration:Int"]
+PROGRAM_GRAPH_RENAME = {"program_id:String": "program_id", "~id": "~to"}
 
-CLIP_GRAPH_REQUIRED = ["clip_id:String","~id","clip_duration:Int"]
+EPISODE_GRAPH_RENAME = {"episode_id:String": "episode_id", "~id": "~to", "episode_duration:Int": "content_duration",
+                        "program_id:String": "program_id"}
 
-CLIP_GRAPH_RENAME = { "clip_id:String":"clip_id","~id":"~to","clip_duration:Int":"content_duration"}
+EPISODE_GRAPH_REQUIRED = ["episode_id:String", "~id", "episode_duration:Int", "program_id:String"]
 
-EXTRA_GRAPH_REQUIRED = ["extra_id:String","~id","extra_duration:Int"]
+CLIP_GRAPH_REQUIRED = ["clip_id:String", "~id", "clip_duration:Int", "program_id:String"]
 
-EXTRA_GRAPH_RENAME = {"extra_id:String":"extra_id","~id":"~to","extra_duration:Int":"content_duration"}
+CLIP_GRAPH_RENAME = {"clip_id:String": "clip_id", "~id": "~to", "clip_duration:Int": "content_duration",
+                     "program_id:String": "program_id"}
 
-VIEWED_REQUIRED  = ["view_frequency","watch_duration","created_on","~from","~to","implicit_rating"]
+EXTRA_GRAPH_REQUIRED = ["extra_id:String", "~id", "extra_duration:Int", "program_id:String"]
+
+EXTRA_GRAPH_RENAME = {"extra_id:String": "extra_id", "~id": "~to", "extra_duration:Int": "content_duration",
+                      "program_id:String": "program_id"}
+
+VIEWED_REQUIRED = ["view_frequency", "watch_duration", "created_on", "~from", "~to", "implicit_rating"]
 
 VIEWED_RENAME = dict(view_frequency="view_frequency:Int", watch_duration="total_watch_duration:Int",
-                     created_on="created_on:String",implicit_rating="implicit_rating:Float")
+                     created_on="created_on:String", implicit_rating="implicit_rating:Float")
+UBD_PROGRAM_GROUP_BY = ['~from', 'program_id', 'customer_id']
 
 GENRE_ID = 'genre_id'
 INNER = "inner"
@@ -138,3 +146,6 @@ VIEW_HISTORY = "view_history"
 CUSTOMER_PREFERENCE = 'customer_preferences'
 CONTENT_ID = "content_id"
 DEFAULT_CLUSTER_ID = -999
+WATCH_DURATION = "watch_duration"
+IMPLICIT_RATING = "implicit_rating"
+
