@@ -354,4 +354,4 @@ class RegisterViewed:
         self.dump_viewed(final_viewed)
 
 
-RegisterViewed().viewed_relationship()
+
