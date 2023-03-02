@@ -1,5 +1,3 @@
-import uuid
-
 from rplus_ingestor.content.preprocessing.extra \
     import extra_data_preprocessing
 from config.config import content_path, content_loader_path
@@ -55,15 +53,13 @@ class DumpExtra:
             extra_data
         )
 
+        extra_data["~id"] = "extra:" + extra_data["extra_id"]
+
+        extra_data['~label'] = EXTRA
+
         extra_data = extra_data.rename(
             EXTRA_AN_RENAME, axis=1
         )
-
-        extra_data["~id"] = extra_data.apply(
-            lambda _: str(uuid.uuid4()),
-            axis=1)
-
-        extra_data['~label'] = EXTRA
 
         self.cls.write_csv_to_s3(
             object_name=f'{content_loader_path}{EXTRA}{CSV}',

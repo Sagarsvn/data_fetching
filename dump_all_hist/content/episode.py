@@ -55,15 +55,13 @@ class DumpEpisode:
             episode_data
         )
 
+        episode_data["~id"] = "episode:" + episode_data['episode_id']
+
+        episode_data['~label'] = EPISODE
+
         episode_data = episode_data.rename(
             EPISODE_AN_RENAME, axis=1
         )
-
-        episode_data["~id"] = episode_data.apply(
-            lambda _: str(uuid.uuid4()
-                          ), axis=1)
-
-        episode_data['~label'] = EPISODE
 
         self.cls.write_csv_to_s3(
             object_name=f'{content_loader_path}{EPISODE}{CSV}',

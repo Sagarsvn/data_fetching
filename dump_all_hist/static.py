@@ -1,4 +1,3 @@
-import uuid
 
 from pandas import DataFrame
 from rplus_ingestor.static.preprocessing.static import static_data_preprocessing
@@ -32,11 +31,12 @@ class DumpStatic:
 
             actor = static_data_preprocessing(actor,ACTOR)
 
-            actor = actor.rename(ACTOR_AN_RENAME, axis=1)
-
-            actor["~id"] = actor.apply(lambda _: str(uuid.uuid4()), axis=1)
+            actor["~id"] = "actor:" + actor["actor_id"]
 
             actor['~label'] = ACTOR
+
+            actor = actor.rename(ACTOR_AN_RENAME, axis=1)
+
             # total length
             Logging.info(f"total record of actor {len(actor)}")
 
@@ -61,16 +61,16 @@ class DumpStatic:
                 writer = fetch_writers()
             except:
 
-                writer = self.cls.read_pickles_from_s3(object_name=
-                                                       f"{static_path}{WRITER}{PKL}")
+                writer = self.cls.read_pickles_from_s3(object_name
+                                                       =f"{static_path}{WRITER}{PKL}")
 
             writer = static_data_preprocessing(writer, WRITER)
 
-            writer = writer.rename(WRITER_AN_RENAME, axis=1)
-
-            writer["~id"] = writer.apply(lambda _: str(uuid.uuid4()), axis=1)
+            writer["~id"] = "writer:" + writer["writer_id"]
 
             writer['~label'] = WRITER
+
+            writer = writer.rename(WRITER_AN_RENAME, axis=1)
 
             # total length of writer
 
@@ -103,13 +103,12 @@ class DumpStatic:
 
             director = static_data_preprocessing(director, DIRECTOR)
 
-            director = director.rename(DIRECTOR_AN_RENAME, axis=1)
-
-            director["~id"] = director.apply(lambda _: str(uuid.uuid4()), axis=1)
+            director["~id"] = "director:" + director["director_id"]
 
             director['~label'] = DIRECTOR
 
-            # total length of director
+            director = director.rename(DIRECTOR_AN_RENAME, axis=1)
+
 
             Logging.info("total record of director {}".format(len(director)))
 
@@ -144,11 +143,11 @@ class DumpStatic:
 
             genre = static_data_preprocessing(genre, GENRE)
 
-            genre = genre.rename(GENRE_AN_RENAME, axis=1)
-
-            genre["~id"] = genre.apply(lambda _: str(uuid.uuid4()), axis=1)
+            genre["~id"] = "genre:" + genre["genre_id"]
 
             genre['~label'] = GENRE
+
+            genre = genre.rename(GENRE_AN_RENAME, axis=1)
 
             # total length of genre
 

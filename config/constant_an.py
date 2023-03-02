@@ -67,7 +67,7 @@ EXTRA_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 # USER
 USER_AN_RENAME = dict(customer_id='customer_id:String', gender='gender:String',
                       customer_status='customer_status:String', customer_created_on='customer_created_on:String',
-                      customer_updated_on='customer_updated_on:String', age='age:Int')
+                      customer_updated_on='customer_updated_on:String', age='age:Int',cluster_id='cluster_id:Int')
 
 USER_AN_REQUIRED = ['~id', 'customer_preferences']
 
@@ -129,15 +129,16 @@ HAS_WRITER = 'HAS_WRITER'
 HAS_EPISODE = 'HAS_EPISODE'
 HAS_EXTRA = 'HAS_EXTRA'
 HAS_CLIP = 'HAS_CLIP'
-HAS_PREFERENCE_1 = 'has_preference_1'
-HAS_PREFERENCE_2 = 'has_preference_2'
-HAS_PREFERENCE_3 = 'has_preference_3'
+CUSTOMER_PREFERENCE_1 = 'customer_preference_1'
+CUSTOMER_PREFERENCE_2 = 'customer_preference_2'
+CUSTOMER_PREFERENCE_3 = 'customer_preference_3'
 VIEWED = "VIEWED"
 # Extension
 CSV = '.csv'
 PKL = '.pkl'
 # Variable
-FROM = '~from'
+FROM = "~from"
+TO = "~to"
 CUSTOMER_ID = "customer_id"
 VIEW_FREQUENCY = "view_frequency"
 DURATION = "duration"
@@ -148,4 +149,7 @@ CONTENT_ID = "content_id"
 DEFAULT_CLUSTER_ID = -999
 WATCH_DURATION = "watch_duration"
 IMPLICIT_RATING = "implicit_rating"
+REGEX_IN_COLUMN = "actor*|genre*|director*|writer*|customer_id*|cluster_id*"
+CLUSTER_ID = "cluster_id"
+MEAN_USER = "mean_user"
 

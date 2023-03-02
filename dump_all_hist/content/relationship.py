@@ -101,7 +101,7 @@ class ProgramRelationship:
             Logging.error(f"Unable to process {HAS_GENRE},{str(e)}")
 
     def create_static_relationship(
-            self, dependencies, label, merge_on):
+            self, dependencies, label, merge_on,):
 
         try:
             program_from = self.program_dependencies[['~id', merge_on]]. \
@@ -127,8 +127,7 @@ class ProgramRelationship:
 
         try:
 
-            has_dependencies["~id"] = has_dependencies.apply(
-                lambda _: str(uuid.uuid4()), axis=1)
+            has_dependencies["~id"] = has_dependencies["~from"] + '-' + has_dependencies['~to']
 
             has_dependencies['~label'] = label
 
@@ -224,8 +223,7 @@ class ProgramRelationship:
             Logging.error(f"Unable to merge {merge_on} dependecies csv,{str(e)}")
 
         try:
-            has_dependencies["~id"] = has_dependencies.apply(
-                lambda _: str(uuid.uuid4()), axis=1)
+            has_dependencies["~id"] = has_dependencies['~from'] + '-' + has_dependencies['~to']
 
             has_dependencies['~label'] = label
 

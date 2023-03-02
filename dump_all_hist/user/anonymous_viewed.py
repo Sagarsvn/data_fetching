@@ -32,17 +32,16 @@ class AnonymousViewed:
         property = {"customer_id:String": "anonymous",
                     "age:Int": 30,
                     "customer_status:String": "activated",
-                    "customer_created_on:String": "2023-01-01T00:00:00+00:00",
-                    "customer_updated_on:String": "2023-01-01T00:00:00+00:00",
+                    "customer_created_on:String": "2023-01-01T00:00:00+07:00",
+                    "customer_updated_on:String": "2023-01-01T00:00:00+07:00",
                     "gender:String": "nan",
                     "cluster_id:Int": DEFAULT_CLUSTER_ID
                     }
 
         anonymous_user = DataFrame([property])
 
-        anonymous_user["~id"] = anonymous_user.apply(
-            lambda _: str(uuid.uuid4()), axis=
-            1)
+
+        anonymous_user["~id"] = "user:" + anonymous_user["customer_id:String"]
 
         anonymous_user['~label'] = USER
 
@@ -61,7 +60,7 @@ class AnonymousViewed:
         ubd = self.cls.read_pickles_from_s3(
             object_name=f"{ubd_path}anonymous_ubd_{anonymous_ubd_start_date.replace('-', '')}{PKL}")
 
-        ubd[CUSTOMER_ID] = 'anonymous'
+
         return ubd
 
     @staticmethod
@@ -108,21 +107,10 @@ class AnonymousViewed:
         merge ubd with grpah user
         to find vertex id
         """
+        ubd[CUSTOMER_ID] = 'anonymous'
+        ubd['~from'] = 'user:anonymous'
 
-        user_history = self.cls.read_csv_from_s3(
-            object_name=f'{user_loader_path}anonymous_user_history{CSV}')
-        user_history = user_history[USER_CUSTOMER_REQUIRED]. \
-            rename(USER_CUSTOMER_RENAME, axis=1)
-        user_history[CUSTOMER_ID] = user_history[CUSTOMER_ID].astype(str)
-        ubd[CUSTOMER_ID] = ubd[CUSTOMER_ID].astype(str)
-        ubd_map = merge(
-            ubd,
-            user_history,
-            how=INNER,
-            left_on=CUSTOMER_ID,
-            right_on=CUSTOMER_ID)
-
-        return ubd_map
+        return ubd
 
     def get_program(
             self
@@ -214,9 +202,7 @@ class AnonymousViewed:
             )
         )
 
-        viewed["~id"] = viewed.apply(
-            lambda _: str(uuid.uuid4()), axis=
-            1)
+        viewed["~id"] = viewed["~from"] + "-" + viewed["~to"]
 
         viewed['~label'] = VIEWED
 
@@ -393,6 +379,7 @@ class AnonymousViewed:
         )
 
         self.dump_viewed(final_viewed)
+
 
 
 
