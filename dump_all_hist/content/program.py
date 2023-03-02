@@ -51,8 +51,7 @@ class DumpProgram:
         )
         program = program_data_preprocessing(program)
 
-        program["~id"] = program.apply(
-            lambda _: str(uuid.uuid4()), axis=1)
+        program["~id"] = "program:"+program["program_id"]
 
         program['~label'] = PROGRAM
 

@@ -8,7 +8,7 @@ if __name__ == "__main__":
     parser.add_argument("-dcn", "--content-node", type=int, default=0)
     parser.add_argument("-dpr", "--program_relationship", type=int, default=0)
     parser.add_argument("-un", "--user-node", type=int, default=0)
-    parser.add_argument("-upn", "--user-preference-node", type=int, default=0)
+    parser.add_argument("-ucn", "--user-cluster-node", type=int, default=0)
     parser.add_argument("-uvn", "--user-viewed-node", type=int, default=0)
     parser.add_argument("-avn", "--anonymous-viewed-node", type=int, default=0)
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
                          content_node=args.content_node or False,
                          program_relationship=args.program_relationship or False,
                          user_node=args.user_node or False,
-                         user_preference_node=args.user_preference_node or False,
+                         user_cluster_node=args.user_cluster_node or False,
                          user_viewed_node=args.user_viewed_node or False,
                          anonymous_viewed_node=args.anonymous_viewed_node or False)
 

@@ -5,9 +5,9 @@ from dump_all_hist.content.program import DumpProgram
 from dump_all_hist.content.relationship import ProgramRelationship
 from dump_all_hist.static import DumpStatic
 from dump_all_hist.user.anonymous_viewed import AnonymousViewed
-from dump_all_hist.user.has_preference import HasPreferenceNode
 from dump_all_hist.user.user import DumpUser
 from dump_all_hist.user.register_viewed import RegisterViewed
+from dump_all_hist.user.user_cluster import UserCluster
 from utils.logger import Logging
 
 
@@ -16,7 +16,7 @@ def create_node_on_graph(
         content_node: bool = False,
         program_relationship: bool = False,
         user_node: bool = False,
-        user_preference_node: bool = False,
+        user_cluster_node:bool = False,
         user_viewed_node: bool = False,
         anonymous_viewed_node: bool = False
 ):
@@ -72,13 +72,14 @@ def create_node_on_graph(
         )
         DumpUser().dump_user_on_graph()
 
-    if user_preference_node:
+    if user_cluster_node:
+
         Logging.info(
-            "Start Dumping of user on graph".center(
+            "Start Dumping of mean user cluster resltionship  on graph".center(
                 100, "*"
             )
         )
-        HasPreferenceNode().has_preference()
+        UserCluster().dump_user_cluster()
 
     if user_viewed_node:
         Logging.info(

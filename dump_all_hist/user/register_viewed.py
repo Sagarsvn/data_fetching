@@ -1,7 +1,5 @@
-import uuid
 
-import pandas as pd
-from pandas import DataFrame, concat, merge, read_csv
+from pandas import DataFrame, concat, merge
 from rplus_ingestor.user.preprocessing.ubd import ubd_data_preprocessing
 from rplus_ingestor.user.rating.implicit_rating  import RegisterUserRating
 
@@ -314,10 +312,7 @@ class RegisterViewed:
             )
         )
 
-        viewed["~id"] = viewed.apply(
-            lambda _: str(uuid.uuid4()), axis=
-            1)
-
+        viewed["~id"] = viewed["~from"] + "-" + viewed["~to"]
         viewed['~label'] = VIEWED
 
         self.cls.write_csv_to_s3(
@@ -354,4 +349,4 @@ class RegisterViewed:
         self.dump_viewed(final_viewed)
 
 
-RegisterViewed().viewed_relationship()
+

@@ -47,7 +47,7 @@ class Config(BaseSettings):
 
 genre_missing_id = {"genre_id": ['74', '89', '94'],
                     "genre_name": ["Excersice", "Sport Highlights", "Misteri"]}
-date_to_save = "20230214"
+date_to_save = "20230224"
 content_path = "historical_data/content/raw/{}/".format(date_to_save)
 user_path = "historical_data/user/raw/{}/".format(date_to_save)
 user_loader_path = "historical_data/user/loader_csv/{}/".format(date_to_save)
@@ -56,9 +56,9 @@ static_loader_path = "historical_data/static/loader_csv/{}/".format(date_to_save
 content_loader_path = "historical_data/content/loader_csv/{}/".format(date_to_save)
 ubd_path = "ubd/raw/{}/".format(date_to_save)
 ubd_loader_path = "ubd/loader_csv/{}/".format(date_to_save)
-registered_ubd_start_month = ["2022-07-01", "2022-08-01", "2022-09-01", "2022-10-01", "2022-11-01", "2022-12-01",
-                              "2023-01-01"]
-registered_ubd_end_month = ["2022-07-31", "2022-08-31", "2022-09-30", "2022-10-31", "2022-11-30", "2022-12-31",
-                            "2023-01-31"]
-anonymous_ubd_start_date = "2023-01-01"
-anonymous_ubd_end_date = "2023-01-31"
+registered_ubd_start_month = ["2022-08-01", "2022-09-01", "2022-10-01", "2022-11-01", "2022-12-01",
+                              "2023-01-01", "2023-02-01"]
+registered_ubd_end_month = ["2022-08-31", "2022-09-30", "2022-10-31", "2022-11-30", "2022-12-31",
+                            "2023-01-31", "2023-02-26"]
+anonymous_ubd_start_date = "2023-01-24"
+anonymous_ubd_end_date = "2023-02-24"
