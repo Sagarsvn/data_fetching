@@ -4,7 +4,6 @@ version = "0.0.2"
 description = ""
 authors = ["AIML Team"]
 readme = "README.md"
-packages = [{include = "data_fetching"}]
 license="MIT"
 classifiers=[
     "License :: OSI Approved :: MIT License",
