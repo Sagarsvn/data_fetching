@@ -23,9 +23,9 @@ secondary = true
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
 # private packages
-rplus-constants-module = ">=0.2.12"
-rplus-utils-module = ">=0.2.4"
-rplus-ingestor-module =">=0.0.6"
+rplus-constants-module = ">=0.2.29"
+rplus-utils-module = ">=0.3.0"
+rplus-ingestor-module =">=0.2.0"
 # public packages
 pandas = "^1.5.1"
 pymongo = "^4.3.2"

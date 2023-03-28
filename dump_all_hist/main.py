@@ -5,6 +5,7 @@ from dump_all_hist.content.program import DumpProgram
 from dump_all_hist.content.relationship import ProgramRelationship
 from dump_all_hist.static import DumpStatic
 from dump_all_hist.user.anonymous_viewed import AnonymousViewed
+from dump_all_hist.user.update_user_cluster import UpdateUserProfileCluster
 from dump_all_hist.user.user import DumpUser
 from dump_all_hist.user.register_viewed import RegisterViewed
 from dump_all_hist.user.user_cluster import UserCluster
@@ -18,7 +19,8 @@ def create_node_on_graph(
         user_node: bool = False,
         user_cluster_node:bool = False,
         user_viewed_node: bool = False,
-        anonymous_viewed_node: bool = False
+        anonymous_viewed_node: bool = False,
+        user_profile_update:bool = False
 ):
     if static_node:
         Logging.info("dump all static node in graph ".center(100, "*"))
@@ -96,3 +98,12 @@ def create_node_on_graph(
             )
         )
         AnonymousViewed().viewed_relationship()
+
+    if user_profile_update:
+
+        Logging.info(
+            "Start Dumping of updated user profile on graph".center(
+                100, "*"
+            )
+        )
+        UpdateUserProfileCluster().update_in_graph()

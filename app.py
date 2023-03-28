@@ -11,6 +11,7 @@ if __name__ == "__main__":
     parser.add_argument("-ucn", "--user-cluster-node", type=int, default=0)
     parser.add_argument("-uvn", "--user-viewed-node", type=int, default=0)
     parser.add_argument("-avn", "--anonymous-viewed-node", type=int, default=0)
+    parser.add_argument("-uup", "--user-profile-update", type=int, default=0)
 
     args = parser.parse_args()
     create_node_on_graph(static_node=args.static_node or False,
@@ -19,5 +20,7 @@ if __name__ == "__main__":
                          user_node=args.user_node or False,
                          user_cluster_node=args.user_cluster_node or False,
                          user_viewed_node=args.user_viewed_node or False,
-                         anonymous_viewed_node=args.anonymous_viewed_node or False)
+                         anonymous_viewed_node=args.anonymous_viewed_node or False,
+                         user_profile_update=args.user_profile_update or False)
+
 
