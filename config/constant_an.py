@@ -153,3 +153,14 @@ REGEX_IN_COLUMN = "actor*|genre*|director*|writer*|customer_id*|cluster_id*"
 CLUSTER_ID = "cluster_id"
 MEAN_USER = "mean_user"
 
+# uopdate_user profile
+
+USER_PROFILE_RENAME = dict(customer_id='customer_id:String(single)', gender='gender:String(single)',
+                           cluster_id='cluster_id:Int(single)')
+
+USER_PROFILE_PREFERENCE_RENAME = dict(preference_customer_preferen_1='customer_preference_1',
+                                      preference_customer_preferen_2='customer_preference_2',
+                                      preference_customer_preferen_3='customer_preference_3')
+
+USER_PROFILE_DROP = ['age', 'gender_f', 'gender_m', 'gender_nan',
+                     'user_similarity_with_centroid', 'mean_user']
