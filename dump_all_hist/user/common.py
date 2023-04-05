@@ -63,7 +63,7 @@ def get_groupby_implict_rating(
     """
 
     ubd_program_rating = ubd.groupby(groupby
-                                     )[on].mean().round(1).astype(object).reset_index()
+                                     )[on].mean().reset_index()
 
     return ubd_program_rating
 
