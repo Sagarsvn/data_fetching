@@ -3,7 +3,7 @@ import uuid
 from pandas import DataFrame, concat, merge
 
 from rplus_ingestor.user.preprocessing.ubd import ubd_data_preprocessing
-from rplus_ingestor.user.rating.implicit_rating import RegisterUserRating
+from rplus_ingestor.user.rating.implicit_rating import  RatingGenerator
 
 from config.config import ubd_path, content_loader_path, user_loader_path, ubd_loader_path, registered_ubd_start_month, \
     anonymous_ubd_start_date
@@ -13,6 +13,7 @@ from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     VIEWED, UBD_GROUP_BY, CONTENT_ID, USER, DEFAULT_CLUSTER_ID, VIEW_FREQUENCY, WATCH_DURATION, CREATED_ON, \
     UBD_PROGRAM_GROUP_BY, PROGRAM, PROGRAM_GRAPH_RENAME, PROGRAM_GRAPH_REQUIRED,IMPLICIT_RATING
 from dump_all_hist.create_node import GenerateNode
+from dump_all_hist.update_node import UpdateNode
 from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on, get_groupby_implict_rating
 
 from utils.logger import Logging
@@ -183,9 +184,15 @@ class AnonymousViewed:
             left_on=CONTENT_ID,
             right_on="{}_id".format(key))
 
-        ubd_map = RegisterUserRating().calculate_rating(
-            ubd_map, "anonymous_user"
-        )
+        ubd_map = ubd_map.rename({"watch_duration": "total_watch_duration"}, axis=1)
+
+        ubd_ = RatingGenerator.calculate_implicit_rating(ubd_map, key)
+
+        ubd_rating = ubd_['implicit_rating']
+
+        ubd_map = concat([ubd_map, ubd_rating], axis=1)
+
+        ubd_map = ubd_map.rename({"total_watch_duration": "watch_duration"}, axis=1)
 
         return ubd_map
 
@@ -211,7 +218,7 @@ class AnonymousViewed:
             df_to_upload=viewed
         )
 
-        GenerateNode.create_node(
+        UpdateNode.update_node(
             key=f'{ubd_loader_path}anoymous_user_{VIEWED.lower()}{CSV}'
         )
 
