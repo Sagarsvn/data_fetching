@@ -55,8 +55,9 @@ class ContentTesting:
     def latest_data_in_graph(content_type):
         content_id_mongodb = ContentTesting.get_latest_one_day_content_id(content_type)
         content_id_graph = ContentTesting.content_id_in_graph(content_type)
+        content_id_graph = list(map(int, content_id_graph))
         content_id = {x: x in content_id_graph for x in content_id_mongodb}
-        print("content id is not updated in graph" ":", [content_id])
+        print("content id is updated(True) or not updated(False) in graph" ":", [content_id])
 # if __name__ == '__main__':
 #     x= ContentTesting.latest_data_in_graph("program")
 
