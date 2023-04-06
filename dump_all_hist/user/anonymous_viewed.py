@@ -390,4 +390,3 @@ class AnonymousViewed:
 
 
 
-AnonymousViewed().viewed_relationship()
