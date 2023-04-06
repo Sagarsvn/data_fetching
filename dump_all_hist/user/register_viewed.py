@@ -1,15 +1,15 @@
-
+import pandas as pd
 from pandas import DataFrame, concat, merge
 from rplus_ingestor.user.preprocessing.ubd import ubd_data_preprocessing
-from rplus_ingestor.user.rating.implicit_rating  import RegisterUserRating
+from rplus_ingestor.user.rating.implicit_rating import RatingGenerator
 
-from config.config import ubd_path, content_loader_path, user_loader_path, ubd_loader_path, registered_ubd_start_month
+from config.config import ubd_path, content_loader_path, ubd_loader_path, registered_ubd_start_month
 from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     EXTRA, INNER, USER_CUSTOMER_RENAME, USER_CUSTOMER_REQUIRED, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
     VIEWED, UBD_GROUP_BY, CONTENT_ID, PROGRAM, PROGRAM_GRAPH_REQUIRED, PROGRAM_GRAPH_RENAME, UBD_PROGRAM_GROUP_BY, \
     VIEW_FREQUENCY, WATCH_DURATION, CREATED_ON, IMPLICIT_RATING
-from dump_all_hist.create_node import GenerateNode
+from dump_all_hist.update_node import UpdateNode
 from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on, get_groupby_implict_rating
 
 from utils.logger import Logging
@@ -76,8 +76,7 @@ class RegisterViewed:
         to find vertex id
         """
 
-        user_history = self.cls.read_csv_from_s3(
-            object_name=f'{user_loader_path}user_history.csv')
+        user_history = pd.read_csv("/Users/sagar/PycharmProjects/data_fetching/dump_all_hist/user/user_history.csv")
         user_history = user_history[USER_CUSTOMER_REQUIRED]. \
             rename(USER_CUSTOMER_RENAME, axis=1)
         user_history[CUSTOMER_ID] = user_history[CUSTOMER_ID].astype(str)
@@ -160,11 +159,15 @@ class RegisterViewed:
             how=INNER,
             left_on=CONTENT_ID,
             right_on="{}_id".format(key))
+        ubd_map = ubd_map.rename({"watch_duration":"total_watch_duration"},axis=1)
 
-        ubd_map = RegisterUserRating().calculate_rating(
-            ubd_map, "registered_user"
-        )
+        ubd_ = RatingGenerator.calculate_implicit_rating(ubd_map,key)
 
+        ubd_rating = ubd_['implicit_rating']
+
+        ubd_map = concat([ubd_map,ubd_rating],axis=1)
+
+        ubd_map = ubd_map.rename({"total_watch_duration":"watch_duration"},axis=1)
         return ubd_map
 
     def genrate_mapping(
@@ -233,7 +236,7 @@ class RegisterViewed:
         return final_viewed
 
     def ubd_program(self,
-                    final_viewed,
+                    ubd_program,
                     program
                     ):
         """"
@@ -242,7 +245,7 @@ class RegisterViewed:
         get vertex id
         """
 
-        ubd_program = final_viewed.drop("~to", axis=1)
+
 
         Logging.info(
             "Preparing program  implicit rating".center(100, "*")
@@ -313,6 +316,7 @@ class RegisterViewed:
         )
 
         viewed["~id"] = viewed["~from"] + "-" + viewed["~to"]
+
         viewed['~label'] = VIEWED
 
         self.cls.write_csv_to_s3(
@@ -320,7 +324,7 @@ class RegisterViewed:
             df_to_upload=viewed
         )
 
-        GenerateNode.create_node(
+        UpdateNode.update_node(
             key=f'{ubd_loader_path}{VIEWED.lower()}{CSV}'
         )
 

@@ -26,7 +26,7 @@ PROGRAM_TYPE_RENAME = dict(id='program_id', title='program_title', summary='prog
 
 EPISODE_RENAME = dict(id='episode_id', title='episode_title', summary='episode_summary',
                       release_date='episode_release_date',
-                      expire_date='episode_expire_date', status='episode_status', duration='episode_duration',
+                      expire_date='episode_expired_date', status='episode_status', duration='episode_duration',
                       season='episode_season', episode='episode_number')
 
 EXTRA_RENAME = dict(id='extra_id', title='extra_title', summary='extra_summary', release_date='extra_release_date',

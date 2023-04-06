@@ -106,8 +106,8 @@ EXTRA_GRAPH_RENAME = {"extra_id:String": "extra_id", "~id": "~to", "extra_durati
 
 VIEWED_REQUIRED = ["view_frequency", "watch_duration", "created_on", "~from", "~to", "implicit_rating"]
 
-VIEWED_RENAME = dict(view_frequency="view_frequency:Int", watch_duration="total_watch_duration:Int",
-                     created_on="created_on:String", implicit_rating="implicit_rating:Float")
+VIEWED_RENAME = dict(view_frequency="view_frequency:Int(single)", watch_duration="total_watch_duration:Int(single)",
+                     created_on="created_on:String(single)", implicit_rating="implicit_rating:Float(single)")
 UBD_PROGRAM_GROUP_BY = ['~from', 'program_id', 'customer_id']
 
 GENRE_ID = 'genre_id'

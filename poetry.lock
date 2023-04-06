@@ -815,20 +815,20 @@ files = [
 
 [[package]]
 name = "networkx"
-version = "3.0"
+version = "3.1"
 description = "Python package for creating and manipulating graphs and networks"
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "networkx-3.0-py3-none-any.whl", hash = "sha256:58058d66b1818043527244fab9d41a51fcd7dcc271748015f3c181b8a90c8e2e"},
-    {file = "networkx-3.0.tar.gz", hash = "sha256:9a9992345353618ae98339c2b63d8201c381c2944f38a2ab49cb45a4c667e412"},
+    {file = "networkx-3.1-py3-none-any.whl", hash = "sha256:4f33f68cb2afcf86f28a45f43efc27a9386b535d567d2127f8f61d51dec58d36"},
+    {file = "networkx-3.1.tar.gz", hash = "sha256:de346335408f84de0eada6ff9fafafff9bcda11f0a0dfaa931133debb146ab61"},
 ]
 
 [package.extras]
 default = ["matplotlib (>=3.4)", "numpy (>=1.20)", "pandas (>=1.3)", "scipy (>=1.8)"]
-developer = ["mypy (>=0.991)", "pre-commit (>=2.20)"]
-doc = ["nb2plots (>=0.6)", "numpydoc (>=1.5)", "pillow (>=9.2)", "pydata-sphinx-theme (>=0.11)", "sphinx (==5.2.3)", "sphinx-gallery (>=0.11)", "texext (>=0.6.7)"]
+developer = ["mypy (>=1.1)", "pre-commit (>=3.2)"]
+doc = ["nb2plots (>=0.6)", "numpydoc (>=1.5)", "pillow (>=9.4)", "pydata-sphinx-theme (>=0.13)", "sphinx (>=6.1)", "sphinx-gallery (>=0.12)", "texext (>=0.6.7)"]
 extra = ["lxml (>=4.6)", "pydot (>=1.4.2)", "pygraphviz (>=1.10)", "sympy (>=1.10)"]
 test = ["codecov (>=2.1)", "pytest (>=7.2)", "pytest-cov (>=4.0)"]
 
@@ -1274,18 +1274,18 @@ files = [
 
 [[package]]
 name = "redis"
-version = "4.5.3"
+version = "4.5.4"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "redis-4.5.3-py3-none-any.whl", hash = "sha256:7df17a0a2b72a4c8895b462dd07616c51b1dcb48fdd7ecb7b6f4bf39ecb2e94e"},
-    {file = "redis-4.5.3.tar.gz", hash = "sha256:56732e156fe31801c4f43396bd3ca0c2a7f6f83d7936798531b9848d103381aa"},
+    {file = "redis-4.5.4-py3-none-any.whl", hash = "sha256:2c19e6767c474f2e85167909061d525ed65bea9301c0770bb151e041b7ac89a2"},
+    {file = "redis-4.5.4.tar.gz", hash = "sha256:73ec35da4da267d6847e47f68730fdd5f62e2ca69e3ef5885c6a78a9374c3893"},
 ]
 
 [package.dependencies]
-async-timeout = {version = ">=4.0.2", markers = "python_version < \"3.11\""}
+async-timeout = {version = ">=4.0.2", markers = "python_version <= \"3.11.2\""}
 
 [package.extras]
 hiredis = ["hiredis (>=1.0.0)"]
@@ -1385,14 +1385,14 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "rplus-constants-module"
-version = "0.2.29"
+version = "0.2.36"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.8,<3.11"
 files = [
-    {file = "rplus_constants_module-0.2.29-py3-none-any.whl", hash = "sha256:20327160d810e78cd1cbba994c221a571632a55a340b5a8d859b147324c83dbb"},
-    {file = "rplus_constants_module-0.2.29.tar.gz", hash = "sha256:a09b6cecfeee1f5372630c2f2cf42831f77db15cca66b6995ec28772997c2838"},
+    {file = "rplus_constants_module-0.2.36-py3-none-any.whl", hash = "sha256:fbefc708e75d642eaa2a0bcb80941127be7b7fa2e4f00c20ae83daada64d7deb"},
+    {file = "rplus_constants_module-0.2.36.tar.gz", hash = "sha256:71390bb0f29bfb2a41a14196059e3c570ea392eedd8987948794f2e128deeb07"},
 ]
 
 [package.dependencies]
@@ -1427,14 +1427,14 @@ reference = "mnc"
 
 [[package]]
 name = "rplus-ingestor-module"
-version = "0.2.0"
+version = "0.4.5"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.8,<3.11"
 files = [
-    {file = "rplus_ingestor_module-0.2.0-py3-none-any.whl", hash = "sha256:60068f4869c402f1dc674b7055b7eb35562a26c69c8d1cf8d99287bbe7d2aa2b"},
-    {file = "rplus_ingestor_module-0.2.0.tar.gz", hash = "sha256:5639831ac320b0e605982e88013248d49e2fac67126282743381352f577728a9"},
+    {file = "rplus_ingestor_module-0.4.5-py3-none-any.whl", hash = "sha256:a240d7b4ef64c9488f29297d2933546aa45d08feb5c92d2bad1c7a54afba7e00"},
+    {file = "rplus_ingestor_module-0.4.5.tar.gz", hash = "sha256:14560f9c114db39651deb82fc216d93c43da11b8218b078cccfdb7502ba26747"},
 ]
 
 [package.dependencies]
@@ -1454,14 +1454,14 @@ reference = "mnc"
 
 [[package]]
 name = "rplus-utils-module"
-version = "0.3.0"
+version = "0.4.5"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.8,<3.11"
 files = [
-    {file = "rplus_utils_module-0.3.0-py3-none-any.whl", hash = "sha256:f9b7fd4006ad54f2cc15cc237cb96ff0eaa4980b2e1fc227558a70ab81a3c5b6"},
-    {file = "rplus_utils_module-0.3.0.tar.gz", hash = "sha256:bafab645ceba19205dc427d45c20e5857055941523d29b8c33b804e35ac485e8"},
+    {file = "rplus_utils_module-0.4.5-py3-none-any.whl", hash = "sha256:48aae8d94306f74558bab25fc2728dadac81e76a5cf27f1843b14606060db621"},
+    {file = "rplus_utils_module-0.4.5.tar.gz", hash = "sha256:082eca4bd5706bc91fb02e5ba2a6d407a23b368664c0d015e70cc045ebcb864d"},
 ]
 
 [package.dependencies]
@@ -1972,4 +1972,4 @@ heapdict = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.11"
-content-hash = "4ff0d49260524a8b72820c45f01a3ecccccb2eff7decda5ee55934ec9f62c922"
+content-hash = "f8d48ffad2ad09cc10002b92dae7f207b76671591f37ad837dc0de30f7f9f7bd"
