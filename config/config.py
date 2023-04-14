@@ -41,13 +41,18 @@ class Config(BaseSettings):
     mongodb_password: str = os.getenv("MONGODB_PASSWORD",
                                       config.get(ENV, "mongodb_password"))
 
+    rplus_mongodb_uri: str = os.getenv("RPLUS_MONGODB_URI",
+                                       config.get(ENV, "rplus_mongodb_uri"))
+
     graph_loader: str = os.getenv("GRAPH_LOADER",
                                   config.get(ENV, "graph_loader"))
 
 
+
+
 genre_missing_id = {"genre_id": ['74', '89', '94'],
                     "genre_name": ["Excersice", "Sport Highlights", "Misteri"]}
-date_to_save = "20230224"
+date_to_save = "20230314"
 content_path = "historical_data/content/raw/{}/".format(date_to_save)
 user_path = "historical_data/user/raw/{}/".format(date_to_save)
 user_loader_path = "historical_data/user/loader_csv/{}/".format(date_to_save)

@@ -89,16 +89,20 @@ class S3Service:
 
     def read_pickles_from_s3(self,
                              object_name=None):
-        try:
-            Logging.info(f"Start reading {self.bucket_name}/{object_name} file from s3")
 
-            content_object = self.resource.Object(self.bucket_name, object_name)
-            read_file = content_object.get()["Body"].read()
+        Logging.info(f"Start reading {self.bucket_name}/{object_name} file from s3")
+        content_object = self.resource.Object(self.bucket_name, object_name)
+        read_file = content_object.get()["Body"].read()
+        try:
             zipfile = BytesIO(read_file)
             with gzip.GzipFile(fileobj=zipfile) as gzipfile:
                 content = gzipfile.read()
 
             loaded_pickle = pickle.loads(content)
+            Logging.info(f"File {self.bucket_name}/{object_name} has been read successfully")
+            return loaded_pickle
+        except gzip.BadGzipFile as e:
+            loaded_pickle = pickle.loads(read_file)
             Logging.info(f"File {self.bucket_name}/{object_name} has been read successfully")
             return loaded_pickle
         except Exception as e:
