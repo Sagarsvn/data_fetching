@@ -1,66 +1,73 @@
-ACTOR_AN_RENAME = dict(actor_id="actor_id:String", actor_name="actor_name:String")
-DIRECTOR_AN_RENAME = dict(director_id="director_id:String", director_name="director_name:String")
+ACTOR_AN_RENAME = dict(actor_id="actor_id:String(single)", actor_name="actor_name:String(single)")
+DIRECTOR_AN_RENAME = dict(director_id="director_id:String(single)", director_name="director_name:String(single)")
 
-WRITER_AN_RENAME = dict(writer_id="writer_id:String", writer_name="writer_name:String")
+WRITER_AN_RENAME = dict(writer_id="writer_id:String(single)", writer_name="writer_name:String(single)")
 
-GENRE_AN_RENAME = dict(genre_id="genre_id:String", genre_name="genre_name:String")
+GENRE_AN_RENAME = dict(genre_id="genre_id:String(single)", genre_name="genre_name:String(single)")
 
 PROGRAM_DROP_PROPERTY = ['actor_id', 'director_id', 'writer_id']
 
-PROGRAM_AN_RENAME = dict(program_id="program_id:String", program_title='program_title:String',
-                         program_summary='program_summary:String',
-                         program_release_date='program_release_date:String',
-                         progrma_expired_date='program_expired_date:String',
-                         program_status='program_status:String', program_category='program_category:String')
+PROGRAM_AN_RENAME = dict(program_id="program_id:String(single)", program_title='program_title:String(single)',
+                         program_summary='program_summary:String(single)',
+                         program_release_date='program_release_date:String(single)',
+                         program_expired_date='program_expired_date:String(single)',
+                         program_status='program_status:String(single)', program_category=
+                         'program_category:String(single)')
 
-EPISODE_AN_RENAME = dict(episode_id='episode_id:String', episode_title='episode_title:String',
-                         episode_summary='episode_summary:String',
-                         episode_release_date='episode_release_date:String',
-                         program_id='program_id:String',
-                         episode_expire_date='episode_expired_date:String', episode_status='episode_status:String',
-                         episode_duration='episode_duration:Int',
-                         episode_season=' episode_season:String', episode_number='episode_number:String')
+EPISODE_AN_RENAME = dict(episode_id='episode_id:String(single)', episode_title='episode_title:String(single)',
+                         episode_summary='episode_summary:String(single)',
+                         episode_release_date='episode_release_date:String(single)',
+                         program_id='program_id:String(single)',
+                         episode_expired_date='episode_expired_date:String(single)', episode_status=
+                         'episode_status:String(single)',
+                         episode_duration='episode_duration:Int(single)',
+                         episode_season=' episode_season:String(single)', episode_number='episode_number:String(single)'
+                         )
 
-CLIP_AN_RENAME = dict(clip_id='clip_id:String', clip_title='clip_title:String', summary='clip_summary:String',
-                      clip_release_date='clip_release_date:String', program_id='program_id:String',
-                      clip_expired_date='clip_expired_date:String', clip_status='clip_status:String',
-                      clip_duration='clip_duration:Int')
+CLIP_AN_RENAME = dict(clip_id='clip_id:String(single)', clip_title='clip_title:String(single)', summary='clip_summary:String(single)',
+                      clip_release_date='clip_release_date:String(single)', program_id='program_id:String(single)',
+                      clip_expired_date='clip_expired_date:String(single)', clip_status='clip_status:String(single)',
+                      clip_duration='clip_duration:Int(single)')
 
-EXTRA_AN_RENAME = dict(extra_id='extra_id:String', extra_title='extra_title:String', program_id='program_id:String',
-                       extra_summary='extra_summary:String', extra_release_date='extra_release_date:String',
-                       extra_expired_date='extra_expired_date:String', extra_status='extra_status:String',
-                       extra_duration='extra_duration:Int')
+EXTRA_AN_RENAME = dict(extra_id='extra_id:String(single)',
+                       extra_title='extra_title:String(single)',
+                       program_id='program_id:String(single)',
+                       extra_summary='extra_summary:String(single)',
+                       extra_release_date='extra_release_date:String(single)',
+                       extra_expired_date='extra_expired_date:String(single)',
+                       extra_status='extra_status:String(single)',
+                       extra_duration='extra_duration:Int(single)')
 
 # PROGRAM
 PROGRAM_DEPENDENCIES = ['~id', 'actor_id', 'director_id', 'writer_id', 'genre_id', 'program_id']
 
 PROGRAM_DEPENDENCIES_DROP_COLUMN = ['actor_id', 'director_id', 'writer_id', 'genre_id']
 
-ACTOR_DEPENDENCIES_RENAME = {'actor_id:String': 'actor_id', '~id': '~to'}
+ACTOR_DEPENDENCIES_RENAME = {'actor_id:String(single)': 'actor_id', '~id': '~to'}
 
 ACTOR_DEPENDENCIES_REQUIRED = ['actor_id', '~to']
 
 WRITER_DEPENDENCIES_REQUIRED = ['writer_id', '~to']
 
-WRITER_DEPENDENCIES_RENAME = {'writer_id:String': 'writer_id', '~id': '~to'}
+WRITER_DEPENDENCIES_RENAME = {'writer_id:String(single)': 'writer_id', '~id': '~to'}
 
-GENRE_DEPENDENCIES_RENAME = {'genre_id:String': 'genre_id', '~id': '~to'}
+GENRE_DEPENDENCIES_RENAME = {'genre_id:String(single)': 'genre_id', '~id': '~to'}
 
 GENRE_DEPENDENCIES_REQUIRED = ['genre_id', '~to']
 
-DIRECTOR_DEPENDENCIES_RENAME = {'director_id:String': 'director_id', '~id': '~to'}
+DIRECTOR_DEPENDENCIES_RENAME = {'director_id:String(single)': 'director_id', '~id': '~to'}
 
 DIRECTOR_DEPENDENCIES_REQUIRED = ['director_id', '~to']
 
-CLIP_DEPENDENCIES_RENAME = {'program_id:String': 'program_id', '~id': '~to'}
+CLIP_DEPENDENCIES_RENAME = {'program_id:String(single)': 'program_id', '~id': '~to'}
 
 CLIP_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 
-EPISODE_DEPENDENCIES_RENAME = {'program_id:String': 'program_id', '~id': '~to'}
+EPISODE_DEPENDENCIES_RENAME = {'program_id:String(single)': 'program_id', '~id': '~to'}
 
 EPISODE_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 
-EXTRA_DEPENDENCIES_RENAME = {'program_id:String': 'program_id', '~id': '~to'}
+EXTRA_DEPENDENCIES_RENAME = {'program_id:String(single)': 'program_id', '~id': '~to'}
 
 EXTRA_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 

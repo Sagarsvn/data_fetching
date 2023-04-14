@@ -17,93 +17,48 @@ def create_node_on_graph(
         content_node: bool = False,
         program_relationship: bool = False,
         user_node: bool = False,
-        user_cluster_node:bool = False,
+        user_cluster_node: bool = False,
         user_viewed_node: bool = False,
         anonymous_viewed_node: bool = False,
-        user_profile_update:bool = False
+        user_profile_update: bool = False
 ):
     if static_node:
-        Logging.info("dump all static node in graph ".center(100, "*"))
-
+        Logging.info("Dumping all static nodes on the graph".center(100, "*"))
         DumpStatic().dump_static_node()
 
     if content_node:
-        Logging.info(
-            "Start Dumping of clip node on network".center(
-                100, "*"
-            )
-        )
-
+        Logging.info("Dumping clip nodes on the graph".center(100, "*"))
         DumpClip().dump_clip_on_graph()
 
-        Logging.info(
-            "Start Dumping of episode node on network".center(
-                100, "*"
-            )
-        )
-
+        Logging.info("Dumping episode nodes on the graph".center(100, "*"))
         DumpEpisode().dump_episode_on_graph()
 
-        Logging.info(
-            "Start Dumping of episode node on network".center(
-                100, "*"
-            )
-        )
+        Logging.info("Dumping extra nodes on the graph".center(100, "*"))
         DumpExtra().dump_extra_on_graph()
 
-        Logging.info(
-            "Start Dumping of program node on network".center(
-                100, "*"
-            )
-        )
+        Logging.info("Dumping program nodes on the graph".center(100, "*"))
         DumpProgram().dump_program_on_graph()
 
     if program_relationship:
-        Logging.info(
-            "Start Dumping of program relationship network".center(
-                100, "*"
-            )
-        )
-        ProgramRelationship().dump_relationship()
+        Logging.info("Creating program relationship on the graph".center(100, "*"))
+        ProgramRelationship().create_relationship()
 
     if user_node:
-        Logging.info(
-            "Start Dumping of user on graph".center(
-                100, "*"
-            )
-        )
+        Logging.info("Dumping user nodes on the graph".center(100, "*"))
         DumpUser().dump_user_on_graph()
 
     if user_cluster_node:
-
-        Logging.info(
-            "Start Dumping of mean user cluster resltionship  on graph".center(
-                100, "*"
-            )
-        )
+        Logging.info("Dumping user cluster nodes on the graph".center(100, "*"))
         UserCluster().dump_user_cluster()
 
     if user_viewed_node:
-        Logging.info(
-            "Start Dumping of user viwed on graph".center(
-                100, "*"
-            )
-        )
+        Logging.info("Dumping user viewed nodes on the graph".center(100, "*"))
         RegisterViewed().viewed_relationship()
 
     if anonymous_viewed_node:
-        Logging.info(
-            "Start Dumping of anonymous user viwed on graph".center(
-                100, "*"
-            )
-        )
+        Logging.info("Dumping anonymous viewed nodes on the graph".center(100, "*"))
         AnonymousViewed().viewed_relationship()
 
     if user_profile_update:
-
-        Logging.info(
-            "Start Dumping of updated user profile on graph".center(
-                100, "*"
-            )
-        )
+        Logging.info("Updating user profile nodes on the graph".center(100, "*"))
         UpdateUserProfileCluster().update_in_graph()
