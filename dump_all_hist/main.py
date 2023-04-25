@@ -5,10 +5,10 @@ from dump_all_hist.content.program import DumpProgram
 from dump_all_hist.content.relationship import ProgramRelationship
 from dump_all_hist.static import DumpStatic
 from dump_all_hist.user.anonymous_viewed import AnonymousViewed
-from dump_all_hist.user.update_user_cluster import UpdateUserProfileCluster
+
 from dump_all_hist.user.user import DumpUser
 from dump_all_hist.user.register_viewed import RegisterViewed
-from dump_all_hist.user.user_cluster import UserCluster
+
 from utils.logger import Logging
 
 
