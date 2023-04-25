@@ -6,7 +6,6 @@ from utils.service.rest import Rest
 
 from config.config import AwsConfig, Config
 
-
 class UpdateNode:
 
     @staticmethod
@@ -21,8 +20,7 @@ class UpdateNode:
             "region": "ap-southeast-1",
             "failOnError": "FALSE",
             "parallelism": "MEDIUM",
-            "updateSingleCardinalityProperties": "TRUE",
-        }
+            "updateSingleCardinalityProperties": "TRUE",}
         resp = rest.post(url, payload=payload)
         time.sleep(2)
         if resp.status_code != 200:
@@ -47,3 +45,4 @@ class UpdateNode:
             else:
                 break
         Logging.info(f"data is dumped for {key}".center(100, "*"))
+

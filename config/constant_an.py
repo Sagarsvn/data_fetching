@@ -72,9 +72,9 @@ EXTRA_DEPENDENCIES_RENAME = {'program_id:String(single)': 'program_id', '~id': '
 EXTRA_DEPENDENCIES_REQUIRED = ['program_id', '~to']
 
 # USER
-USER_AN_RENAME = dict(customer_id='customer_id:String', gender='gender:String',
-                      customer_status='customer_status:String', customer_created_on='customer_created_on:String',
-                      customer_updated_on='customer_updated_on:String', age='age:Int',cluster_id='cluster_id:Int')
+USER_AN_RENAME = dict(customer_id='customer_id:String(single)', gender='gender:String(single)',
+                      customer_status='customer_status:String(Single)', customer_created_on='customer_created_on:String(single)',
+                      customer_updated_on='customer_updated_on:String(single)', age='age:Int(single)',cluster_id='cluster_id:Int(single)')
 
 USER_AN_REQUIRED = ['~id', 'customer_preferences']
 
@@ -88,28 +88,27 @@ GENRE_REQUIRED = ['~to', 'genre_id']
 
 UBD_GROUP_BY = ['customer_id', '~from','content_type', 'content_id']
 
-USER_CUSTOMER_RENAME = {"customer_id:String": "customer_id", "~id": "~from"}
 
-USER_CUSTOMER_REQUIRED = ["customer_id:String", "~id"]
+USER_CUSTOMER_REQUIRED = ["customer_id"]
 
-PROGRAM_GRAPH_REQUIRED = ["program_id:String", "~id"]
+PROGRAM_GRAPH_REQUIRED = ["program_id:String(single)", "~id"]
 
-PROGRAM_GRAPH_RENAME = {"program_id:String": "program_id", "~id": "~to"}
+PROGRAM_GRAPH_RENAME = {"program_id:String(single)": "program_id", "~id": "~to"}
 
-EPISODE_GRAPH_RENAME = {"episode_id:String": "episode_id", "~id": "~to", "episode_duration:Int": "content_duration",
-                        "program_id:String": "program_id"}
+EPISODE_GRAPH_RENAME = {"episode_id:String(single)": "episode_id", "~id": "~to", "episode_duration:Int(single)": "content_duration",
+                        "program_id:String(single)": "program_id"}
 
-EPISODE_GRAPH_REQUIRED = ["episode_id:String", "~id", "episode_duration:Int", "program_id:String"]
+EPISODE_GRAPH_REQUIRED = ["episode_id:String(single)", "~id", "episode_duration:Int(single)", "program_id:String(single)"]
 
-CLIP_GRAPH_REQUIRED = ["clip_id:String", "~id", "clip_duration:Int", "program_id:String"]
+CLIP_GRAPH_REQUIRED = ["clip_id:String(single)", "~id", "clip_duration:Int(single)", "program_id:String(single)"]
 
-CLIP_GRAPH_RENAME = {"clip_id:String": "clip_id", "~id": "~to", "clip_duration:Int": "content_duration",
-                     "program_id:String": "program_id"}
+CLIP_GRAPH_RENAME = {"clip_id:String(single)": "clip_id", "~id": "~to", "clip_duration:Int(single)": "content_duration",
+                    "program_id:String(single)": "program_id"}
 
-EXTRA_GRAPH_REQUIRED = ["extra_id:String", "~id", "extra_duration:Int", "program_id:String"]
+EXTRA_GRAPH_REQUIRED = ["extra_id:String(single)", "~id", "extra_duration:Int(single)", "program_id:String(single)"]
 
-EXTRA_GRAPH_RENAME = {"extra_id:String": "extra_id", "~id": "~to", "extra_duration:Int": "content_duration",
-                      "program_id:String": "program_id"}
+EXTRA_GRAPH_RENAME = {"extra_id:String(single)": "extra_id", "~id": "~to", "extra_duration:Int(single)": "content_duration",
+                      "program_id:String(single)": "program_id"}
 
 VIEWED_REQUIRED = ["view_frequency", "watch_duration", "created_on", "~from", "~to", "implicit_rating"]
 
@@ -160,7 +159,8 @@ REGEX_IN_COLUMN = "actor*|genre*|director*|writer*|customer_id*|cluster_id*"
 CLUSTER_ID = "cluster_id"
 MEAN_USER = "mean_user"
 
-# uopdate_user profile
+CLUSTERING_DATA_FILE_PATH = "user_data/clustering_data.pkl"
+# update_user profile
 
 USER_PROFILE_RENAME = dict(customer_id='customer_id:String(single)', gender='gender:String(single)',
                            cluster_id='cluster_id:Int(single)')
@@ -171,3 +171,5 @@ USER_PROFILE_PREFERENCE_RENAME = dict(preference_customer_preferen_1='customer_p
 
 USER_PROFILE_DROP = ['age', 'gender_f', 'gender_m', 'gender_nan',
                      'user_similarity_with_centroid', 'mean_user']
+
+UBD_REQUIRED_COLUMN =['customer_id','created_on','watch_duration','content_type','content_id']

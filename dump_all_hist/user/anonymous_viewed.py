@@ -1,31 +1,31 @@
-import uuid
+
 
 from pandas import DataFrame, concat, merge
 
 from rplus_ingestor.user.preprocessing.ubd import ubd_data_preprocessing
 from rplus_ingestor.user.rating.implicit_rating import  RatingGenerator
+from rplus_utils import fetch_all_ubd
 
-from config.config import ubd_path, content_loader_path, user_loader_path, ubd_loader_path, registered_ubd_start_month, \
-    anonymous_ubd_start_date
+from config.config import ubd_path, content_loader_path, user_loader_path, ubd_loader_path, anonymous_ubd_start_date
 from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
-    EXTRA, INNER, USER_CUSTOMER_RENAME, USER_CUSTOMER_REQUIRED, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
+    EXTRA, INNER, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
     VIEWED, UBD_GROUP_BY, CONTENT_ID, USER, DEFAULT_CLUSTER_ID, VIEW_FREQUENCY, WATCH_DURATION, CREATED_ON, \
-    UBD_PROGRAM_GROUP_BY, PROGRAM, PROGRAM_GRAPH_RENAME, PROGRAM_GRAPH_REQUIRED,IMPLICIT_RATING
+    UBD_PROGRAM_GROUP_BY, PROGRAM, PROGRAM_GRAPH_RENAME, PROGRAM_GRAPH_REQUIRED, IMPLICIT_RATING, UBD_REQUIRED_COLUMN
 from dump_all_hist.create_node import GenerateNode
 from dump_all_hist.update_node import UpdateNode
 from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on, get_groupby_implict_rating
+from export_data.export_mongo import S3Connector
 
 from utils.logger import Logging
-from utils.s3_service import S3Service
+
 
 
 class AnonymousViewed:
 
-    def __init__(
-            self
-    ):
-        self.cls = S3Service.from_connection()
+    def __init__(self):
+        self.s3_connector = S3Connector()
+
 
     def create_anonymous_user_node(
             self
@@ -46,64 +46,31 @@ class AnonymousViewed:
 
         anonymous_user['~label'] = USER
 
-        self.cls.write_csv_to_s3(
+        self.s3_connector.store_csv_to_s3(
             object_name=f'{user_loader_path}anonymous_user_history{CSV}',
-            df_to_upload=anonymous_user
+            data=anonymous_user
         )
 
         GenerateNode.create_node(
             key=f'{user_loader_path}anonymous_user_history{CSV}'
         )
 
-    def fetch_anonymous_ubd(
-            self
-    ):
-        ubd = self.cls.read_pickles_from_s3(
-            object_name=f"{ubd_path}anonymous_ubd_{anonymous_ubd_start_date.replace('-', '')}{PKL}")
-
-
+    def fetch_anonymous_ubd(self):
+        ubd = fetch_all_ubd(anonymous=True)
+        ubd = ubd[UBD_REQUIRED_COLUMN]
         return ubd
 
-    @staticmethod
-    def preprocessing_ubd(ubd):
-        """
-        preprocessing of all ubd
-        return view count and
-        duration and created_on
-        """
-        ubd = ubd_data_preprocessing(
-            ubd
-        )
-        return ubd
 
     @staticmethod
-    def groupby(
-            ubd
-    ):
-        """
-            group by
-            on column
-            """
-        ubd_view_count = get_view_counts(
-            ubd, UBD_GROUP_BY, VIEW_FREQUENCY
-        )
-        ubd_duration = get_duration(
-            ubd, UBD_GROUP_BY, WATCH_DURATION
-        )
-        ubd_created_on = get_created_on(
-            ubd, UBD_GROUP_BY, CREATED_ON
-        )
-        ubd_temp = ubd_view_count.merge(
-            ubd_duration, on=UBD_GROUP_BY, how=INNER
-        )
-        ubd_ = ubd_temp.merge(
-            ubd_created_on, on=UBD_GROUP_BY, how=INNER
-        )
-
+    def groupby(ubd):
+        ubd_view_count = get_view_counts(ubd, UBD_GROUP_BY, VIEW_FREQUENCY)
+        ubd_duration = get_duration(ubd, UBD_GROUP_BY, WATCH_DURATION)
+        ubd_created_on = get_created_on(ubd, UBD_GROUP_BY, CREATED_ON)
+        ubd_temp = ubd_view_count.merge(ubd_duration, on=UBD_GROUP_BY, how=INNER)
+        ubd_ = ubd_temp.merge(ubd_created_on, on=UBD_GROUP_BY, how=INNER)
         return ubd_
 
-    def map_customer_id(self,
-                        ubd: DataFrame):
+    def map_customer_id(self,ubd: DataFrame):
         """
         merge ubd with grpah user
         to find vertex id
@@ -119,7 +86,7 @@ class AnonymousViewed:
         """get program from
             loader csv
         """
-        program_graph = self.cls.read_csv_from_s3(
+        program_graph = self.s3_connector.fetch_csv_from_s3(
             object_name=f'{content_loader_path}{PROGRAM}{CSV}')
 
         return program_graph[PROGRAM_GRAPH_REQUIRED]. \
@@ -132,7 +99,7 @@ class AnonymousViewed:
         get episode from
         loader csv
         """
-        episode_graph = self.cls.read_csv_from_s3(
+        episode_graph = self.s3_connector.fetch_csv_from_s3(
             object_name=f'{content_loader_path}{EPISODE}{CSV}')
 
         return episode_graph[EPISODE_GRAPH_REQUIRED]. \
@@ -144,7 +111,7 @@ class AnonymousViewed:
         """get clip from
               loader csv
               """
-        clip_graph = self.cls.read_csv_from_s3(
+        clip_graph = self.s3_connector.fetch_csv_from_s3(
             object_name=f'{content_loader_path}{CLIP}{CSV}')
         return clip_graph[CLIP_GRAPH_REQUIRED]. \
             rename(CLIP_GRAPH_RENAME, axis=1)
@@ -155,7 +122,7 @@ class AnonymousViewed:
         """get extra from
             loader csv
         """
-        extra_graph = self.cls.read_csv_from_s3(
+        extra_graph = self.s3_connector.fetch_csv_from_s3(
             object_name=f'{content_loader_path}{EXTRA}{CSV}')
 
         return extra_graph[EXTRA_GRAPH_REQUIRED]. \
@@ -196,8 +163,7 @@ class AnonymousViewed:
 
         return ubd_map
 
-    def dump_viewed(self,
-                    viewed):
+    def dump_viewed(self,viewed):
         """
         dump viwed on the graph
         """
@@ -213,9 +179,9 @@ class AnonymousViewed:
 
         viewed['~label'] = VIEWED
 
-        self.cls.write_csv_to_s3(
+        self.s3_connector.store_csv_to_s3(
             object_name=f'{ubd_loader_path}anoymous_user_{VIEWED.lower()}{CSV}',
-            df_to_upload=viewed
+            data=viewed
         )
 
         UpdateNode.update_node(
@@ -228,69 +194,27 @@ class AnonymousViewed:
             )
         )
 
-    def genrate_mapping(
-            self
-    ):
+    def genrate_mapping(self):
+        """Mapping all content and customer with ubd
         """
-        mapping all content and
-        customer with ubd
-        """
-        Logging.info(
-            "fetch all ubd from S3".center(100, "*")
-        )
+        Logging.info("Fetch all ubd from S3".center(100, "*"))
         ubd = self.fetch_anonymous_ubd()
-
-        Logging.info(
-            "preprocessing of ubd".center(100, "*")
-        )
-
-        ubd_ = self.preprocessing_ubd(ubd)
-
-        Logging.info(
-            "mapping of user with vertex_id".center(100, "*")
-        )
-        ubd_map = self.map_customer_id(ubd_)
-
-        Logging.info(
-            "get episode".center(100, "*")
-        )
+        Logging.info("Mapping of user with vertex_id".center(100, "*"))
+        ubd_map = self.map_customer_id(ubd)
+        Logging.info("Get episode".center(100, "*"))
         episode = self.get_episode()
-
-        Logging.info(
-            "mapping content_id with episode".center(100, "*")
-        )
-
+        Logging.info("Mapping content_id with episode".center(100, "*"))
         ubd_episode = self.map_content(ubd_map, episode, EPISODE)
-
-        Logging.info(
-            "mapping clip".center(100, "*")
-        )
-
+        Logging.info("Mapping clip".center(100, "*"))
         clip = self.get_clip()
-
-        Logging.info(
-            "mapping content_id with clip".center(100, "*")
-        )
+        Logging.info("Mapping content_id with clip".center(100, "*"))
         ubd_clip = self.map_content(ubd_map, clip, CLIP)
-
-        Logging.info(
-            "fetching extra".center(100, "*")
-        )
-
+        Logging.info("Fetching extra".center(100, "*"))
         extra = self.get_extra()
-
-        Logging.info(
-            "mapping content_id with extra".center(100, "*")
-        )
-
+        Logging.info("Mapping content_id with extra".center(100, "*"))
         ubd_extra = self.map_content(ubd_map, extra, EXTRA)
-
-        Logging.info(
-            "join user behaviour data ".center(100, "*")
-        )
-
+        Logging.info("Join user behaviour data ".center(100, "*"))
         final_viewed = concat([ubd_episode, ubd_clip, ubd_extra], ignore_index=True)
-
         return final_viewed
 
     def ubd_program(self,
