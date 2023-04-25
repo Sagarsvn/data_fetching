@@ -41,15 +41,11 @@ def create_node_on_graph(
 
     if program_relationship:
         Logging.info("Creating program relationship on the graph".center(100, "*"))
-        ProgramRelationship().create_relationship()
+        ProgramRelationship().dump_relationship()
 
     if user_node:
         Logging.info("Dumping user nodes on the graph".center(100, "*"))
         DumpUser().dump_user_on_graph()
-
-    if user_cluster_node:
-        Logging.info("Dumping user cluster nodes on the graph".center(100, "*"))
-        UserCluster().dump_user_cluster()
 
     if user_viewed_node:
         Logging.info("Dumping user viewed nodes on the graph".center(100, "*"))
@@ -58,7 +54,3 @@ def create_node_on_graph(
     if anonymous_viewed_node:
         Logging.info("Dumping anonymous viewed nodes on the graph".center(100, "*"))
         AnonymousViewed().viewed_relationship()
-
-    if user_profile_update:
-        Logging.info("Updating user profile nodes on the graph".center(100, "*"))
-        UpdateUserProfileCluster().update_in_graph()

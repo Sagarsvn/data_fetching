@@ -24,7 +24,7 @@ class ProgramRelationship:
         try:
             dependencies = self.s3_connector.fetch_csv_from_s3(object_name=f"{static_loader_path}{dependency_name}{CSV}")
             dependencies = dependencies.rename(rename_columns, axis=1)[required_columns]
-            ProgramRelationship().create_relationship(dependencies, merge_on, label)
+            ProgramRelationship().create_static_relationship(dependencies, merge_on, label)
         except Exception as e:
             Logging.error(f"Unable to process {label}, {str(e)}")
 
@@ -95,5 +95,6 @@ class ProgramRelationship:
             GenerateNode.create_node(key=f"{content_loader_path}{label.lower()}{CSV}")
         except Exception as e:
             Logging.error(f"Unable to dump {label} {str(e)}")
+
 
 
