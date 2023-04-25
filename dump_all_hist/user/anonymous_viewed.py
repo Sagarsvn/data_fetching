@@ -1,12 +1,9 @@
-
-
 from pandas import DataFrame, concat, merge
 
-from rplus_ingestor.user.preprocessing.ubd import ubd_data_preprocessing
 from rplus_ingestor.user.rating.implicit_rating import  RatingGenerator
 from rplus_utils import fetch_all_ubd
 
-from config.config import ubd_path, content_loader_path, user_loader_path, ubd_loader_path, anonymous_ubd_start_date
+from config.config import  content_loader_path, user_loader_path, ubd_loader_path
 from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     EXTRA, INNER, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
