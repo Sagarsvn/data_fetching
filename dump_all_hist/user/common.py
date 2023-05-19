@@ -68,3 +68,11 @@ def get_groupby_implict_rating(
     return ubd_program_rating
 
 
+def get_perecentage_complete(ubd:DataFrame,groupby,on):
+
+    """Calculate percentage_complete attribute
+    :param ubd: dataframe object panda
+    :return: dataframe object pandas
+    """
+    ubd_ = ubd.groupby(groupby)[on].mean().reset_index()
+    return ubd_

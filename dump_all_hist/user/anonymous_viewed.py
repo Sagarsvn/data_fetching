@@ -8,10 +8,12 @@ from config.constant_an import PKL, CUSTOMER_ID, EPISODE, CSV, CLIP, \
     EXTRA, INNER, EPISODE_GRAPH_REQUIRED, EPISODE_GRAPH_RENAME, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
     VIEWED, UBD_GROUP_BY, CONTENT_ID, USER, DEFAULT_CLUSTER_ID, VIEW_FREQUENCY, WATCH_DURATION, CREATED_ON, \
-    UBD_PROGRAM_GROUP_BY, PROGRAM, PROGRAM_GRAPH_RENAME, PROGRAM_GRAPH_REQUIRED, IMPLICIT_RATING, UBD_REQUIRED_COLUMN
+    UBD_PROGRAM_GROUP_BY, PROGRAM, PROGRAM_GRAPH_RENAME, PROGRAM_GRAPH_REQUIRED, IMPLICIT_RATING, UBD_REQUIRED_COLUMN, \
+    PERCENTAGE_COMPLETE
 from dump_all_hist.create_node import GenerateNode
 from dump_all_hist.update_node import UpdateNode
-from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on, get_groupby_implict_rating
+from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on, get_groupby_implict_rating, \
+    get_perecentage_complete
 from export_data.export_mongo import S3Connector
 
 from utils.logger import Logging
@@ -63,8 +65,10 @@ class AnonymousViewed:
         ubd_view_count = get_view_counts(ubd, UBD_GROUP_BY, VIEW_FREQUENCY)
         ubd_duration = get_duration(ubd, UBD_GROUP_BY, WATCH_DURATION)
         ubd_created_on = get_created_on(ubd, UBD_GROUP_BY, CREATED_ON)
+        ubd_percentage_complete = get_perecentage_complete(ubd,UBD_GROUP_BY,PERCENTAGE_COMPLETE)
         ubd_temp = ubd_view_count.merge(ubd_duration, on=UBD_GROUP_BY, how=INNER)
         ubd_ = ubd_temp.merge(ubd_created_on, on=UBD_GROUP_BY, how=INNER)
+        ubd_ = ubd_.merge(ubd_percentage_complete, on=UBD_GROUP_BY, how=INNER)
         return ubd_
 
     def map_customer_id(self,ubd: DataFrame):
@@ -258,6 +262,8 @@ class AnonymousViewed:
             ubd_program, UBD_PROGRAM_GROUP_BY, WATCH_DURATION
 
         )
+        ubd_percentage_complete = get_perecentage_complete(
+            ubd_program, UBD_PROGRAM_GROUP_BY, PERCENTAGE_COMPLETE)
 
         ubd_temp1 = ubd_program_implicit_rating.merge(
             ubd_program_view_count, on=UBD_PROGRAM_GROUP_BY, how=INNER
@@ -266,9 +272,11 @@ class AnonymousViewed:
             ubd_program_created_on, on=UBD_PROGRAM_GROUP_BY, how=INNER
         )
 
-        ubd_ = ubd_temp2.merge(
+        ubd_temp3 = ubd_temp2.merge(
             ubd_program_total_watch_duration, on=UBD_PROGRAM_GROUP_BY, how=INNER
         )
+        ubd_ = ubd_temp3.merge(ubd_percentage_complete, on=UBD_PROGRAM_GROUP_BY, how="inner"
+                                      )
 
         ubd_program = merge(
             ubd_,
@@ -307,7 +315,4 @@ class AnonymousViewed:
         )
 
         self.dump_viewed(final_viewed)
-
-
-
 
