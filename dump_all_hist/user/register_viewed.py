@@ -10,9 +10,10 @@ from config.constant_an import CUSTOMER_ID, EPISODE, CSV, CLIP, \
     VIEWED_REQUIRED, VIEWED_RENAME, CLIP_GRAPH_REQUIRED, CLIP_GRAPH_RENAME, EXTRA_GRAPH_REQUIRED, EXTRA_GRAPH_RENAME, \
     VIEWED, UBD_GROUP_BY, CONTENT_ID, PROGRAM, PROGRAM_GRAPH_REQUIRED, PROGRAM_GRAPH_RENAME, UBD_PROGRAM_GROUP_BY, \
     VIEW_FREQUENCY, WATCH_DURATION, CREATED_ON, IMPLICIT_RATING, UBD_REQUIRED_COLUMN, CLUSTERING_DATA_FILE_PATH, USER, \
-    FROM
+    FROM, PERCENTAGE_COMPLETE
 from dump_all_hist.update_node import UpdateNode
-from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on, get_groupby_implict_rating
+from dump_all_hist.user.common import get_view_counts, get_duration, get_created_on, get_groupby_implict_rating, \
+    get_perecentage_complete
 from export_data.export_mongo import S3Connector
 
 from utils.logger import Logging
@@ -33,8 +34,10 @@ class RegisterViewed:
         ubd_view_count = get_view_counts(ubd, UBD_GROUP_BY, VIEW_FREQUENCY)
         ubd_duration = get_duration(ubd, UBD_GROUP_BY, WATCH_DURATION)
         ubd_created_on = get_created_on(ubd, UBD_GROUP_BY, CREATED_ON)
+        ubd_percentage_complete = get_perecentage_complete(ubd,UBD_GROUP_BY,PERCENTAGE_COMPLETE)
         ubd_temp = ubd_view_count.merge(ubd_duration, on=UBD_GROUP_BY, how=INNER)
         ubd_ = ubd_temp.merge(ubd_created_on, on=UBD_GROUP_BY, how=INNER)
+        ubd_ = ubd_.merge(ubd_percentage_complete, on=UBD_GROUP_BY, how=INNER)
         return ubd_
 
     def map_customer_id(self, ubd: pd.DataFrame):
@@ -145,22 +148,23 @@ class RegisterViewed:
         ubd_program_created_on = get_created_on(
             ubd_program, UBD_PROGRAM_GROUP_BY, CREATED_ON
         )
-
         Logging.info("Preparing program watch duration".center(100, "*"))
         ubd_program_total_watch_duration = get_duration(
             ubd_program, UBD_PROGRAM_GROUP_BY, WATCH_DURATION
         )
-
+        ubd_percentage_complete = get_perecentage_complete(
+            ubd_program,UBD_PROGRAM_GROUP_BY,PERCENTAGE_COMPLETE)
         ubd_temp1 = ubd_program_implicit_rating.merge(
             ubd_program_view_count, on=UBD_PROGRAM_GROUP_BY, how="inner"
         )
         ubd_temp2 = ubd_temp1.merge(
             ubd_program_created_on, on=UBD_PROGRAM_GROUP_BY, how="inner"
         )
-        ubd_program = ubd_temp2.merge(
+        ubd_temp3 = ubd_temp2.merge(
             ubd_program_total_watch_duration, on=UBD_PROGRAM_GROUP_BY, how="inner"
         )
-
+        ubd_program = ubd_temp3.merge(ubd_percentage_complete,on=UBD_PROGRAM_GROUP_BY, how="inner"
+                                      )
         Logging.info("Mapping program_id with user".center(100, "*"))
 
         ubd_program = merge(
@@ -197,5 +201,6 @@ class RegisterViewed:
 
         Logging.info("Dumping VIEWED relationship".center(100, "*"))
         self.dump_viewed_data(final_viewed)
+
 
 

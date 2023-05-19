@@ -110,10 +110,12 @@ EXTRA_GRAPH_REQUIRED = ["extra_id:String(single)", "~id", "extra_duration:Int(si
 EXTRA_GRAPH_RENAME = {"extra_id:String(single)": "extra_id", "~id": "~to", "extra_duration:Int(single)": "content_duration",
                       "program_id:String(single)": "program_id"}
 
-VIEWED_REQUIRED = ["view_frequency", "watch_duration", "created_on", "~from", "~to", "implicit_rating"]
+VIEWED_REQUIRED = ["view_frequency", "watch_duration", "created_on", "~from", "~to", "implicit_rating",
+                   "percentage_complete"]
 
 VIEWED_RENAME = dict(view_frequency="view_frequency:Int(single)", watch_duration="total_watch_duration:Int(single)",
-                     created_on="created_on:String(single)", implicit_rating="implicit_rating:Float(single)")
+                     created_on="created_on:String(single)", implicit_rating="implicit_rating:Float(single)",
+                     percentage_complete="precentage_complete:Float(single)")
 UBD_PROGRAM_GROUP_BY = ['~from', 'program_id', 'customer_id']
 
 GENRE_ID = 'genre_id'
@@ -172,4 +174,5 @@ USER_PROFILE_PREFERENCE_RENAME = dict(preference_customer_preferen_1='customer_p
 USER_PROFILE_DROP = ['age', 'gender_f', 'gender_m', 'gender_nan',
                      'user_similarity_with_centroid', 'mean_user']
 
-UBD_REQUIRED_COLUMN =['customer_id','created_on','watch_duration','content_type','content_id']
+UBD_REQUIRED_COLUMN = ['customer_id','created_on','watch_duration','content_type','content_id','percentage_complete']
+PERCENTAGE_COMPLETE = "percentage_complete"

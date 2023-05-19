@@ -1,7 +1,6 @@
 import pandas as pd
 
 from rplus_ingestor.static.preprocessing.static import static_data_preprocessing
-from dump_all_hist.create_node import GenerateNode
 from dump_all_hist.update_node import UpdateNode
 
 from export_data.export_mongo import S3Connector, DataFetcher
@@ -73,7 +72,7 @@ class DumpStatic:
                 data=data,
             )
 
-            GenerateNode.update_node(key=f"{static_loader_path}{data_type}{CSV}")
+            UpdateNode.update_node(key=f"{static_loader_path}{data_type}{CSV}")
 
         except Exception as e:
             Logging.error(
