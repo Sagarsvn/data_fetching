@@ -3,6 +3,7 @@ import itertools
 from rplus_utils.db_services.aws_netpune.neptune_graph_db import AwsANGraphDb
 from rplus_constants.constants import CUSTOMER_ID, USER
 from rplus_utils.db_services.aws_s3.s3bucket import S3Services
+from rplus_constants.config import CUSTOMER_IDS_PATH
 
 
 def fetch_customers_count():
@@ -39,14 +40,12 @@ def fetch_customer_ids():
 
 
 def save_customer_ids_s3():
-    path = "user_data/customer_ids_in_graph.pkl"
     all_vertices_ids = fetch_customer_ids()
     try:
-        S3Services.new_connection().write_pickle_list_s3(object_name=path, data=all_vertices_ids)
+        S3Services.new_connection().write_pickle_list_s3(object_name=CUSTOMER_IDS_PATH, data=all_vertices_ids)
         print("Successfully dumped customer_ids list on S3..")
     except Exception as e:
         print(f"Exception while saving customer_ids list in S3, Error: {e}")
-
 
 # Run the code below after dumping all the user nodes in graphDB
 # if __name__ == '__main__':
