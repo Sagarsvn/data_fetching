@@ -45,5 +45,3 @@ class DumpExtra:
         self.s3_connector.store_csv_to_s3(data=extra_data, object_name=f"{content_loader_path}{EXTRA}{CSV}")
         self.graph_node.update_node(key=f"{content_loader_path}{EXTRA}{CSV}")
         Logging.info(f"Successfully dumped {EXTRA} on the graph".center(100, "*"))
-
-
