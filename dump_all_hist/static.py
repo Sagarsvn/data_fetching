@@ -54,8 +54,6 @@ class DumpStatic:
             else:
                 missing_record = pd.DataFrame(genre_missing_id)
                 data = data.append(missing_record, ignore_index=True)
-                data['created_at'] = 'nan'
-                data['updated_at'] = 'nan'
                 data["~id"] = f"{data_type.lower()}:" + data[f"{data_type.lower()}_id"]
                 data['~label'] = data_type
 
